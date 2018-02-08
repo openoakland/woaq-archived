@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+    mysql:
+        image: mysql
+        environment:
+         - MYSQL_ROOT_PASSWORD=password
+         - MYSQL_DATABASE=woeip
+        ports:
+         - 3306:3306
+        volumes:
+         - ./:/sqlin
+         - ./mysqldata:/var/lib/mysql
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        restart: always
+        links:
+         - mysql:db
+        ports:
+         - 8888:80
+        volumes:
+         - /sessions

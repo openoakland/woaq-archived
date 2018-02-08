@@ -1,0 +1,36 @@
+--
+-- $Id: pmupdate.mysql,v 1.2 2010/11/23 23:30:28 pmaoki Exp $
+--
+-- executed using:
+--
+-- % mysql -D <database> -u <user> -p
+-- mysql> \. pmload.mysql
+--
+
+DELETE FROM calibration;
+DELETE FROM shift;
+DELETE FROM payload;
+DELETE FROM file;
+DELETE FROM message;
+DELETE FROM pm;
+DELETE FROM gps;
+
+LOAD DATA LOCAL INFILE 'calibration.txt' REPLACE INTO TABLE calibration;
+LOAD DATA LOCAL INFILE 'shift.txt' REPLACE INTO TABLE shift;
+LOAD DATA LOCAL INFILE 'payload.txt' REPLACE INTO TABLE payload;
+LOAD DATA LOCAL INFILE 'file.txt' REPLACE INTO TABLE file;
+LOAD DATA LOCAL INFILE 'message.txt' REPLACE INTO TABLE message;
+LOAD DATA LOCAL INFILE 'pm.txt' REPLACE INTO TABLE pm;
+LOAD DATA LOCAL INFILE 'gps.txt' REPLACE INTO TABLE gps;
+
+OPTIMIZE TABLE calibration;
+OPTIMIZE TABLE shift;
+OPTIMIZE TABLE payload;
+OPTIMIZE TABLE file;
+OPTIMIZE TABLE message;
+OPTIMIZE TABLE pm;
+OPTIMIZE TABLE gps;
+
+DELETE FROM pmgps;
+INSERT INTO pmgps SELECT * FROM pmgpsouterview;
+OPTIMIZE TABLE pmgps;

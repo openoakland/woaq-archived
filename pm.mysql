@@ -1,0 +1,381 @@
+--
+-- $Id: pm.mysql,v 1.4 2010/05/23 22:18:01 pmaoki Exp $
+--
+-- executed using:
+--
+-- % mysql -D <database> -u <user> -p
+-- mysql> \. pm.mysql
+--
+-- NB: mysql unix time functions often seem to fail with unix times
+-- that are < 0 or > 2^31-1, so UNSIGNED timestamps don't buy us much.
+-- i left it that way to be consistent with the badge tables.
+--
+
+--
+-- each dusttrak's calibration and firmware changes gets an entry
+-- here.
+--
+-- note that serial number, firmware version, and calibration time are
+-- only found in dusttrak .csv files (due to trakpro bugs - fixed in
+-- trakpro 4.3 - the serial number is present but not valid in older
+-- trakpro .txt files; the calibration date is not there at all).
+--
+-- NB: valid period is (utcstart,utcend]
+--
+DROP TABLE IF EXISTS calibration;
+CREATE TABLE calibration(
+  device	CHAR(1) NOT NULL,
+  serial	CHAR(10) NOT NULL,			-- dusttrak serial number
+  firmware	CHAR(10) NOT NULL,			-- dusttrak firmware version
+  utccal	INT UNSIGNED NOT NULL,			-- dusttrak calibration date
+  utcstart	INT UNSIGNED NOT NULL,			-- first valid date
+  utcend	INT UNSIGNED NOT NULL			-- last valid date
+);
+
+--
+-- each surveyor shift gets an entry here.
+--
+-- initially, this is in 1:1 correspondence with the distinct PM
+-- payloads received.  as long as this is true, this table mostly just
+-- stores the human-readable (friendly) name.
+--
+-- later, if the UI supports it, we might enable:
+-- - manual merging of these initial shifts (which would make the
+--   start/end times the min/max of the merged PM payload times)
+-- - manual adjustment of the friendly name for convenience
+--
+-- note that GPS payloads do not define shifts.  in many cases, the
+-- GPS is not turned off at shift breaks, so GPS payloads may span
+-- shifts.
+--
+-- NB: valid period is [utcstart,utcend]
+--
+-- shift:payload is 1:n
+--
+DROP TABLE IF EXISTS shift;
+CREATE TABLE shift(
+  id		INT UNSIGNED NOT NULL AUTO_INCREMENT,	-- row id
+
+  device	CHAR(1) NOT NULL,			-- A, B, C, ...
+  utcstart	INT UNSIGNED NOT NULL,			-- first valid time
+  utcend	INT UNSIGNED NOT NULL,			-- last valid time
+
+  name		VARCHAR(255) NOT NULL,			-- friendly name
+
+  UNIQUE (device, utcstart, utcend),
+  KEY (id)						-- req'd for auto
+);
+
+--
+-- each unique PM or GPS payload gets an entry here.
+-- (uniqueness is determined by checksum, not by name.)
+--
+-- the metadata comes from the MIME file name and file contents.  if a
+-- file is re-submitted, it is assumed that this is either a duplicate
+-- submission (if metadata is the same) or an intentional attempt to
+-- correct the metadata (if the metadata is not the same).  in the
+-- latter case, the latest metadata will replace earlier metadata.
+-- this must then be propagated to 'pm', 'gps' and 'shift'.
+--
+-- when a payload is deleted, we can cascade the deletion of:
+--  'pm'
+--  'gps'
+--  'shift' (gc if no more references from 'payload')
+--
+-- NB: valid period is [utcstart,utcend]
+--
+-- shift:payload is 1:n
+-- payload:file is 1:n
+--
+DROP TABLE IF EXISTS payload;
+CREATE TABLE payload(
+  id		INT UNSIGNED NOT NULL AUTO_INCREMENT,	-- row id
+
+  checksum	CHAR(32) NOT NULL,			-- MD5 content checksum
+
+  device	CHAR(1),				-- A, B, C, ...
+  filter	DECIMAL(3,1),				-- NULL if GPS
+  utcstart	INT UNSIGNED,				-- first valid time
+  utcend	INT UNSIGNED,				-- last valid time
+
+  sid		INT UNSIGNED,				-- ref: shift id, NULL if GPS
+
+  UNIQUE (checksum),
+  KEY (id)						-- req'd for auto
+);
+
+--
+-- each uploaded file gets an entry here.
+-- (this is true even if the file has content/payload that has already
+-- been received - that is, MIME messages can contain attachments that
+-- duplicate attachments in other messages, or even attachments that
+-- duplicate names within the same message.)
+--
+-- when a file is deleted, we can cascade the deletion of:
+--  'payload' (gc if no more references from 'file')
+--
+-- payload:file is 1:n
+--
+DROP TABLE IF EXISTS file;
+CREATE TABLE file(
+  id		INT UNSIGNED NOT NULL AUTO_INCREMENT,	-- row id
+
+  name		VARCHAR(255) NOT NULL,			-- MIME file name
+
+  mid		INT UNSIGNED NOT NULL,			-- ref: message id
+  part		INT UNSIGNED NOT NULL,			-- part number in message
+  pid		INT UNSIGNED NOT NULL,			-- ref: payload id
+
+  UNIQUE (mid, part),
+  KEY (id)						-- req'd for auto
+);
+
+--
+-- each processed message gets an entry here.
+-- the subject and date are just for simplifying tracing/debugging.
+--
+-- when a message is deleted, we can cascade the deletion of:
+--  'file' (gc if no more references from 'message')
+--
+--
+DROP TABLE IF EXISTS message;
+CREATE TABLE message(
+  id		INT UNSIGNED NOT NULL AUTO_INCREMENT,	-- row id
+
+  uid		VARCHAR(255) NOT NULL,			-- POP3 UID
+  subject	VARCHAR(255),				-- Subject: from header
+  date		VARCHAR(255),				-- Date: from header
+  fromuser	VARCHAR(255),				-- From: from header
+  processed	INT UNSIGNED,				-- 0 if not finished
+
+  UNIQUE (uid),
+  KEY (id)						-- req'd for auto
+);
+
+-- 
+-- each PM reading gets an entry here.
+-- (this is true whether there is a GPS reading for it or not.)
+--
+DROP TABLE IF EXISTS pm;
+CREATE TABLE pm(
+  id		INT UNSIGNED NOT NULL AUTO_INCREMENT,	-- row id
+  utc 		INT UNSIGNED NOT NULL,			-- unix timestamp
+  device	CHAR(1) NOT NULL,			-- A, B, C, ...
+  
+  filter	DECIMAL(3,1) NOT NULL,			-- 1.0, 2.5, 4.0, 10.0
+  pm		FLOAT NOT NULL,				-- PM reading
+
+  pid		INT UNSIGNED NOT NULL,			-- ref: pm payload id
+
+  PRIMARY KEY (utc, device),
+  KEY (id)						-- req'd for auto
+);
+
+--
+-- each GPS reading gets an entry here.
+-- (this is true whether there is a PM reading for it or not.)
+--
+DROP TABLE IF EXISTS gps;
+CREATE TABLE gps(
+  id		INT UNSIGNED NOT NULL AUTO_INCREMENT,	-- row id
+  utc 		INT UNSIGNED NOT NULL,			-- unix timestamp
+  device	CHAR(1) NOT NULL,			-- A, B, C, ...
+
+  lat 		DOUBLE PRECISION NOT NULL,		-- latitude (degrees)
+  lon 		DOUBLE PRECISION NOT NULL,		-- longitude (degrees)
+
+  pid		INT UNSIGNED NOT NULL,			-- gps payload id
+
+  PRIMARY KEY (utc, device),
+  KEY (id)						-- req'd for auto
+);
+
+--
+-- these define views combining the PM and GPS readings, joined on
+-- device/time.
+--
+-- XXX this assumes that both have the same period (ie, 1 Hz).
+--
+
+--
+-- outer join view
+-- NB: this syntax only works if the ON clause is on unique join keys.
+-- see http://www.artfulsoftware.com/infotree/queries.php?&bw=1004#690
+-- for (more complicated) alternatives if this changes.
+--
+DROP VIEW IF EXISTS pmgpsouterview;
+CREATE VIEW pmgpsouterview AS
+SELECT pm.utc, pm.device, 
+       pm.filter, pm.pm,
+       gps.lat, gps.lon, 
+       pm.pid as pmpid, gps.pid as gpspid
+  -- this part gets all pm rows; gps columns may be null
+  FROM pm LEFT JOIN gps
+    ON (pm.utc = gps.utc AND pm.device = gps.device)
+UNION 
+SELECT gps.utc, gps.device, 
+       pm.filter, pm.pm, 
+       gps.lat, gps.lon,
+       pm.pid as pmpid, gps.pid as gpspid
+  -- this part gets all gps rows; pm columns may be null
+  FROM pm RIGHT JOIN gps
+    ON (pm.utc = gps.utc AND pm.device = gps.device)
+;
+
+--
+-- inner join view
+--
+DROP VIEW IF EXISTS pmgpsinnerview;
+CREATE VIEW pmgpsinnerview AS
+SELECT pm.utc, pm.device, 
+       pm.filter, pm.pm,
+       gps.lat, gps.lon,
+       pm.pid as pmpid, gps.pid as gpspid
+  FROM pm, gps
+ WHERE (pm.utc = gps.utc AND pm.device = gps.device)
+;
+
+
+--
+-- other handy views
+--
+-- all PM payloads
+DROP VIEW IF EXISTS payloadpm;
+CREATE VIEW payloadpm AS
+SELECT * 
+  FROM payload
+ WHERE filter IS NOT NULL
+;
+-- all GPS payloads
+DROP VIEW IF EXISTS payloadgps;
+CREATE VIEW payloadgps AS
+SELECT * 
+  FROM payload
+ WHERE filter IS NULL
+;
+DROP VIEW IF EXISTS filepayload;
+CREATE VIEW filepayload AS
+SELECT f.id as f_id, f.name, f.mid, f.part, f.pid,
+       p.id as p_id, p.checksum, p.device, p.filter, p.utcstart, p.utcend, p.sid
+FROM   file f, payload p
+WHERE  (f.pid = p.id)
+;
+DROP VIEW IF EXISTS messagefile;
+CREATE VIEW messagefile AS
+SELECT m.id as m_id, m.uid, m.subject, m.date, m.fromuser, m.processed,
+       f.id as f_id, f.name, f.mid, f.part, f.pid
+FROM   message m, file f
+WHERE  (f.mid = m.id)
+;
+DROP VIEW IF EXISTS messagefilepayload;
+CREATE VIEW messagefilepayload AS
+SELECT m.id as m_id, m.uid, m.subject, m.date, m.fromuser, m.processed,
+       fp.*
+FROM   message m, filepayload fp
+WHERE  (fp.mid = m.id)
+;
+-- all orphan PM payloads (do not have any overlapping GPS payload)
+DROP VIEW IF EXISTS orphanpm;
+CREATE VIEW orphanpm AS
+SELECT pp.*
+FROM payloadpm  pp
+     LEFT JOIN
+     payloadgps gp
+     ON 
+     ((pp.utcstart <= gp.utcend) AND (pp.utcend >= gp.utcstart))
+     AND
+     (pp.device = gp.device)
+WHERE gp.id IS NULL
+;
+-- all orphan GPS payloads (do not have any overlapping PM payload)
+DROP VIEW IF EXISTS orphangps;
+CREATE VIEW orphangps AS
+SELECT gp.*
+FROM payloadgps gp
+     LEFT JOIN
+     payloadpm  pp
+     ON 
+     ((pp.utcstart <= gp.utcend) AND (pp.utcend >= gp.utcstart))
+     AND
+     (pp.device = gp.device)
+WHERE pp.id IS NULL
+;
+-- all orphan PM attachments (do not have any overlapping GPS payload)
+DROP VIEW IF EXISTS orphanpmfile;
+CREATE VIEW orphanpmfile AS
+SELECT f.id as f_id, f.name, f.mid, f.part, f.pid,
+       p.id as p_id, p.checksum, p.device, p.filter, p.utcstart, p.utcend, p.sid
+  FROM file f, orphanpm p
+ WHERE (f.pid = p.id)
+;
+-- all orphan GPS attachments (do not have any overlapping PM payload)
+DROP VIEW IF EXISTS orphangpsfile;
+CREATE VIEW orphangpsfile AS
+SELECT f.id as f_id, f.name, f.mid, f.part, f.pid,
+       p.id as p_id, p.checksum, p.device, p.filter, p.utcstart, p.utcend, p.sid
+  FROM file f, orphangps p
+ WHERE (f.pid = p.id)
+;
+-- all messages containing orphan PM attachments
+DROP VIEW IF EXISTS orphanpmmessage;
+CREATE VIEW orphanpmmessage AS
+SELECT m.id as m_id, m.uid, m.subject, m.date, m.fromuser, m.processed,
+       f.*
+  FROM message m, orphanpmfile f
+ WHERE (f.mid = m.id)
+;
+-- all messages containing orphan GPS attachments
+DROP VIEW IF EXISTS orphangpsmessage;
+CREATE VIEW orphangpsmessage AS
+SELECT m.id as m_id, m.uid, m.subject, m.date, m.fromuser, m.processed,
+       f.*
+  FROM message m, orphangpsfile f
+ WHERE (f.mid = m.id)
+;
+-- all attachments not loaded (due to errors)
+DROP VIEW IF EXISTS unloadedfile;
+CREATE VIEW unloadedfile AS
+SELECT m.id as m_id, m.uid, m.subject, m.date, m.fromuser, m.processed,
+       f.*
+  FROM message m, file f
+ WHERE (f.pid = 0) AND (f.mid = m.id)
+;
+-- all attachments, loaded or not loaded
+DROP VIEW IF EXISTS allfile;
+CREATE VIEW allfile AS
+SELECT mf.*,
+       p.id as p_id, p.checksum, p.device, p.filter, p.utcstart, p.utcend, p.sid
+  FROM messagefile mf LEFT JOIN payload p
+    ON p.id = mf.pid
+;
+
+
+--
+-- this defines a materialized version of view, to be populated
+-- with:
+--   INSERT IGNORE INTO pmgps SELECT * FROM pmgpsouterview;
+-- (note how the NOT NULL column specifications differ from the base
+-- tables due to outer join)
+-- or:
+--   INSERT IGNORE INTO pmgps SELECT * FROM pmgpsinnerview;
+-- depending on what you're trying to do.
+--
+-- this view update only needs to be triggered once per message processed.
+--
+DROP TABLE IF EXISTS pmgps;
+CREATE TABLE pmgps(
+  utc 		INT UNSIGNED NOT NULL,			-- unix timestamp
+  device	CHAR(1) NOT NULL,			-- A, B, C, ...
+  
+  filter	DECIMAL(3,1),				-- 1.0, 2.5, 4.0, 10.0
+  pm		FLOAT,					-- PM reading
+  lat 		DOUBLE PRECISION,			-- latitude (degrees)
+  lon 		DOUBLE PRECISION,			-- longitude (degrees)
+
+  pmpid		INT UNSIGNED,				-- pm payload id
+  gpspid	INT UNSIGNED,				-- gps payload id
+
+  PRIMARY KEY (utc, device),
+  INDEX (lat),
+  INDEX (lon)
+);
