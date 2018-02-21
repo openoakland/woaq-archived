@@ -25,12 +25,12 @@ try:
             shifts.append(shift)
 
         # we want filter size and reading along with time/geo
-        fieldnames=['utc', 'filter', 'pm', 'lat', 'lon',]
+        fieldnames=['utc', 'filter', 'pm', 'lat', 'lon', 'device']
 
         for shift in shifts:
             # get the readings that just correspond to this shift
             sql = """
-                select utc, filter, pm, lat, lon
+                select utc, filter, pm, lat, lon, device
                 from pmgpsinnerview
                 where device=%s
                 and utc >= %s
