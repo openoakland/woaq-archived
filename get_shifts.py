@@ -41,7 +41,7 @@ try:
             # output one CSV per shift
             with open('shifts/{}.csv'.format(shift['name']), 'w') as outfile:
                 writer = csv.DictWriter(
-                    outfile, 
+                    outfile,
                     fieldnames=fieldnames)
                 writer.writeheader()
                 for row in cursor.fetchall():
