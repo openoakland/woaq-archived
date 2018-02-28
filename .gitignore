@@ -1,6 +1,5 @@
 dump/*
 mysqldata/*
 *.txt
-_site
 .sass-cache
 .jekyll-metadata
