@@ -1,4 +1,5 @@
 import csv
+import yaml
 from distutils.dir_util import mkpath
 
 import pymysql.cursors
@@ -12,6 +13,7 @@ connection = pymysql.connect(host='localhost',
 
 # create the output directory
 mkpath('shifts')
+mkpath('yml_template')
 
 try:
     shifts = []
@@ -37,6 +39,7 @@ try:
                 and utc <= %s
                 """
             cursor.execute(sql, (shift['device'], shift['utcstart'], shift['utcend']))
+            filters = set()
 
             # output one CSV per shift
             with open('shifts/{}.csv'.format(shift['name']), 'w') as outfile:
@@ -45,7 +48,17 @@ try:
                     fieldnames=fieldnames)
                 writer.writeheader()
                 for row in cursor.fetchall():
+                    filters.add(str(row["filter"]))
                     writer.writerow(row)
+
+            with open("yml_template/{}.yml".format(shift['name']), 'w') as outfile:
+                data = {
+                    "start_time": shift['utcstart'],
+                    "end_time": shift['utcend'],
+                    "device": shift['device'],
+                    "filter": list(filters)
+                }
+                yaml.dump(data, outfile, default_flow_style=False)
 
 finally:
     connection.close()
