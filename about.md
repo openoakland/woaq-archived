@@ -12,12 +12,12 @@ This project is in support of an environmental justice group in West Oakland, th
 
 [video](https://www.youtube.com/watch?time_continue=143&v=KThvnkzSatU )
 
-WOEIP has been advocating for cleaner air in their community since the early 00’s. 
+WOEIP has been advocating for cleaner air in their community since the early 00’s.
 
-Read more about air quality issues in West Oakland: https://www.edf.org/airqualitymaps/pollution-and-health-concerns-west-oakland 
+Read more about air quality issues in West Oakland: https://www.edf.org/airqualitymaps/pollution-and-health-concerns-west-oakland
 
 Also have a look at EDF’s policy proposals to get a sense of the agenda:
-https://www.edf.org/airqualitymaps/policies-reduce-pollution-and-protect-health 
+https://www.edf.org/airqualitymaps/policies-reduce-pollution-and-protect-health
 
 A key component of their strategy has been citizen science approaches to monitoring air quality. They have low-cost sensors that they provide to residents for guided air quality tours of the neighborhood.
 
