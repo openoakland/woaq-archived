@@ -80,6 +80,7 @@ class AqGpsJoiner:
         """
         if self._output_header:
             # TODO(smcclellan): Determine correct output format
+            self._output_header = False
             return "timestamp,mass,latitude,longitude"
 
         # TODO(smcclellan): Implement
