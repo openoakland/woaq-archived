@@ -1,6 +1,7 @@
 import csv
-import pynmea2
 from datetime import datetime, timedelta
+
+import pynmea2
 from more_itertools import peekable
 from pytz import timezone, utc
 
