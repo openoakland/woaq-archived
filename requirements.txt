@@ -1,1 +1,2 @@
 PyMySQL ~= 0.8.0
+pynmea2 ~= 1.12.0
