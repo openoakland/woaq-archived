@@ -6,6 +6,7 @@ from more_itertools import peekable
 from pytz import timezone, utc
 
 
+# TODO(smcclellan): Add unit tests
 class AqGpsJoiner:
     """Joins air quality data (as CSV) and GPS data (as NMEA sentences) into CSV output"""
 
@@ -68,14 +69,17 @@ class AqGpsJoiner:
             if self._aq_datetime < self._gps_datetime:
                 self._aq_peekable.next()
 
+        self._output_header = True
+
     def __iter__(self):
         return self
-
-    def header(self):
-        return "timestamp,mass,latitude,longitude"
 
     def next(self):
         """
         :return: Combined air quality and GPS data as a line of CSV text
         """
+        if self._output_header:
+            # TODO(smcclellan): Determine correct output format
+            return "timestamp,mass,latitude,longitude"
+
         # TODO(smcclellan): Implement
