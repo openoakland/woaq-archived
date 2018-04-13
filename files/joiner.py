@@ -9,7 +9,6 @@ from more_itertools import peekable
 from pytz import timezone, utc
 
 
-# TODO(smcclellan): Add unit tests
 class AqGpsJoiner:
     """Joins air quality data (as CSV) and GPS data (as NMEA sentences) into CSV output"""
 
