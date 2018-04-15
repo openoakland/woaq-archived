@@ -52,14 +52,18 @@ class AqGpsJoiner:
         # Churn through GPS data until we have established the date and time, and caught up with the AQ start time
         while self._gps_datetime is None or self._gps_datetime < self._aq_start_datetime:
             gps = self._parse_peek_gps()
-            if hasattr(gps, 'datestamp'):
-                self._gps_date = gps.datestamp
-            if hasattr(gps, 'timestamp'):
-                self._gps_time = gps.timestamp
-            if hasattr(gps, 'lat'):
-                self._gps_lat = gps.lat
-            if hasattr(gps, 'lon'):
-                self._gps_lon = gps.lon
+            datestamp = getattr(gps, 'datestamp', None)
+            timestamp = getattr(gps, 'timestamp', None)
+            latitude = getattr(gps, 'latitude', None)
+            longitude = getattr(gps, 'longitude', None)
+            if datestamp is not None:
+                self._gps_date = datestamp
+            if timestamp is not None:
+                self._gps_time = timestamp
+            if latitude is not None:
+                self._gps_lat = latitude
+            if longitude is not None:
+                self._gps_lon = longitude
             if self._gps_date is not None and self._gps_time is not None:
                 self._gps_datetime = utc.localize(datetime.combine(self._gps_date, self._gps_time))
             if self._gps_datetime is None or self._gps_datetime < self._aq_start_datetime:
@@ -96,14 +100,18 @@ class AqGpsJoiner:
 
         while self._gps_datetime < timestamp:
             gps = self._parse_peek_gps()
-            if hasattr(gps, 'datestamp'):
-                self._gps_date = gps.datestamp
-            if hasattr(gps, 'timestamp'):
-                self._gps_time = gps.timestamp
-            if hasattr(gps, 'lat'):
-                self._gps_lat = gps.lat
-            if hasattr(gps, 'lon'):
-                self._gps_lon = gps.lon
+            datestamp = getattr(gps, 'datestamp', None)
+            timestamp = getattr(gps, 'timestamp', None)
+            latitude = getattr(gps, 'latitude', None)
+            longitude = getattr(gps, 'longitude', None)
+            if datestamp is not None:
+                self._gps_date = datestamp
+            if timestamp is not None:
+                self._gps_time = timestamp
+            if latitude is not None:
+                self._gps_lat = latitude
+            if longitude is not None:
+                self._gps_lon = longitude
             self._gps_datetime = datetime.combine(self._gps_date, self._gps_time).replace(tzinfo=utc)
             if self._gps_datetime < timestamp:
                 self._gps_peekable.next()
