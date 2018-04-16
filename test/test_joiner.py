@@ -33,19 +33,21 @@ class TestAqGpsJoiner(unittest.TestCase):
                '$GPRMC,070007.00,A,1900.000,N,2900.000,W,1.52,155.39,190717,,,',
                '$GPRMC,070008.00,A,2000.000,N,3000.000,W,1.52,155.39,190717,,,']
 
-        joiner = AqGpsJoiner(aq, gps, tdiff_tolerance_secs=1)
+        joiner = AqGpsJoiner(aq, gps, tdiff_tolerance_secs=1, filter_size='10')
 
         self.assertEqual(joiner.next(), 'utc,filter,pm,lat,lon,device')
-        self.assertEqual(joiner.next(), '1500447599,,0.001,11.0,-21.0,A')
-        self.assertEqual(joiner.next(), '1500447600,,0.002,12.0,-22.0,A')
-        self.assertEqual(joiner.next(), '1500447601,,0.003,13.0,-23.0,A')
-        self.assertEqual(joiner.next(), '1500447602,,0.004,14.0,-24.0,A')
-        self.assertEqual(joiner.next(), '1500447603,,0.005,15.0,-25.0,A')
-        self.assertEqual(joiner.next(), '1500447604,,0.006,15.0,-25.0,A')  # Last GPS, none exists for this timestamp
+        self.assertEqual(joiner.next(), '1500447599,10,0.001,11.000000,-21.000000,A')
+        self.assertEqual(joiner.next(), '1500447600,10,0.002,12.000000,-22.000000,A')
+        self.assertEqual(joiner.next(), '1500447601,10,0.003,13.000000,-23.000000,A')
+        self.assertEqual(joiner.next(), '1500447602,10,0.004,14.000000,-24.000000,A')
+        self.assertEqual(joiner.next(), '1500447603,10,0.005,15.000000,-25.000000,A')
+        # Use last GPS, none exists for this timestamp
+        self.assertEqual(joiner.next(), '1500447604,10,0.006,15.000000,-25.000000,A')
         # No row due to tdiff_tolerance_secs
-        self.assertEqual(joiner.next(), '1500447606,,0.008,19.0,-29.0,A')  # Next GPS, none exists for this timestamp
-        self.assertEqual(joiner.next(), '1500447607,,0.009,19.0,-29.0,A')
-        self.assertEqual(joiner.next(), '1500447608,,0.010,20.0,-30.0,A')
+        # Use next GPS, none exists for this timestamp
+        self.assertEqual(joiner.next(), '1500447606,10,0.008,19.000000,-29.000000,A')
+        self.assertEqual(joiner.next(), '1500447607,10,0.009,19.000000,-29.000000,A')
+        self.assertEqual(joiner.next(), '1500447608,10,0.010,20.000000,-30.000000,A')
         self.assertRaises(StopIteration, joiner.next)
 
 

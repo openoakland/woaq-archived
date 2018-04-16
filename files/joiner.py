@@ -12,21 +12,23 @@ from pytz import timezone, utc
 class AqGpsJoiner:
     """Joins air quality data (as CSV) and GPS data (as NMEA sentences) into CSV output"""
 
-    def __init__(self, aq_data, gps_data, tdiff_tolerance_secs=1):
+    def __init__(self, aq_data, gps_data, tdiff_tolerance_secs=1, filter_size='2.5'):
         """
         :param aq_data: Air quality data, should be passed as an iterable containing as lines of CSV text
         :param gps_data: GPS data, should be passed as an iterable containing NMEA sentences
         :param tdiff_tolerance_secs: Air quality readings that are not close in time to any GPS datum will be thrown
                out, where 'close' is defined as within a number of seconds specified by this parameter.
+        :param filter_size: The filter size used for air quality measurement
         """
 
         # Assume AQ data uses Pacific timezone
-        self.timezone = timezone('America/Los_Angeles')
+        aq_timezone = timezone('America/Los_Angeles')
 
         self._tolerance = timedelta(seconds=tdiff_tolerance_secs)
+        self._filter_size = filter_size
 
         # Read metadata from start of air quality data as lines of {attribute},{value} pairs
-        self.metadata = {}
+        self._metadata = {}
 
         aq_itr = iter(aq_data)
         metadata_lines = takewhile(lambda x: x.strip(), aq_itr)  # AQ metadata is terminated by a blank line
@@ -34,19 +36,18 @@ class AqGpsJoiner:
             sp = ml.split(',')
             attribute = sp[0].strip()
             value = sp[1].strip()
-            self.metadata[attribute] = value
+            self._metadata[attribute] = value
 
         # E.g. '07/17/2014'
-        aq_start_date = datetime.strptime(self.metadata['Test Start Date'], '%m/%d/%Y').date()
+        aq_start_date = datetime.strptime(self._metadata['Test Start Date'], '%m/%d/%Y').date()
 
         # E.g. 12:40:35 PM
         aq_start_time =\
-            datetime.strptime(self.metadata['Test Start Time'], '%I:%M:%S %p').time()
+            datetime.strptime(self._metadata['Test Start Time'], '%I:%M:%S %p').time()
 
         # Starting datetime used for matching GPS records with AQ records
-        self._aq_start_datetime =\
-            self.timezone.normalize(self.timezone.localize(datetime.combine(aq_start_date, aq_start_time)))\
-                .astimezone(utc)
+        self._aq_start_datetime = \
+            aq_timezone.normalize(aq_timezone.localize(datetime.combine(aq_start_date, aq_start_time))).astimezone(utc)
 
         self._gps_datetime = None
         self._gps_lat = None
@@ -96,8 +97,6 @@ class AqGpsJoiner:
             # TODO(smcclellan): How should this be defined?
             device = errors or 'A'
 
-            filt = ''  # TODO(smcclellan): What is this??
-
             while self._gps_datetime < aq_datetime:
                 self._gps_last_datetime = self._gps_datetime
                 self._gps_last_lat = self._gps_lat
@@ -113,7 +112,7 @@ class AqGpsJoiner:
             if aq_gps_tdiff <= aq_gps_last_tdiff and aq_gps_tdiff <= self._tolerance:
                 line = '{utc},{filter},{pm},{lat:.6f},{lon:.6f},{device}'.format(
                     utc=utc_timestamp,
-                    filter=filt,
+                    filter=self._filter_size,
                     pm=mass,
                     lat=self._gps_lat,
                     lon=self._gps_lon,
@@ -121,7 +120,7 @@ class AqGpsJoiner:
             elif aq_gps_last_tdiff <= aq_gps_tdiff and aq_gps_last_tdiff <= self._tolerance:
                 line = '{utc},{filter},{pm},{lat:.6f},{lon:.6f},{device}'.format(
                     utc=utc_timestamp,
-                    filter=filt,
+                    filter=self._filter_size,
                     pm=mass,
                     lat=self._gps_last_lat,
                     lon=self._gps_last_lon,
@@ -152,10 +151,11 @@ if __name__ == "__main__":
     gps_file = ''
     output_file = ''
     tolerance = 1
+    filt = '2.5'
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'ha:g:o:t:', ['aq=', 'gps=', 'out=', 'tolerance='])
+        opts, args = getopt.getopt(sys.argv[1:], 'ha:g:o:t:f:', ['aq=', 'gps=', 'out=', 'tolerance=', 'filter='])
     except getopt.GetoptError:
-        print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 5'
+        print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 1 -f 2.5'
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
@@ -169,8 +169,10 @@ if __name__ == "__main__":
             output_file = arg
         elif opt in ('-t', '--tolerance'):
             tolerance = int(arg)
+        elif opt in ('-f', '--filter'):
+            filt = arg
 
     with open(aq_file, 'r') as a:
         with open(gps_file, 'r') as g:
             with open(output_file, 'wb') as o:
-                o.writelines("%s\n" % l for l in AqGpsJoiner(a, g, tolerance))
+                o.writelines("%s\n" % l for l in AqGpsJoiner(a, g, tolerance, filt))
