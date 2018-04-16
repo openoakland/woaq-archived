@@ -6,21 +6,24 @@ from datetime import datetime, timedelta
 from itertools import takewhile
 
 import pynmea2
-from more_itertools import peekable
 from pytz import timezone, utc
 
 
 class AqGpsJoiner:
     """Joins air quality data (as CSV) and GPS data (as NMEA sentences) into CSV output"""
 
-    def __init__(self, aq_data, gps_data):
+    def __init__(self, aq_data, gps_data, tdiff_tolerance_secs=1):
         """
         :param aq_data: Air quality data, should be passed as an iterable containing as lines of CSV text
         :param gps_data: GPS data, should be passed as an iterable containing NMEA sentences
+        :param tdiff_tolerance_secs: Air quality readings that are not close in time to any GPS datum will be thrown
+               out, where 'close' is defined as within a number of seconds specified by this parameter.
         """
 
         # Assume AQ data uses Pacific timezone
         self.timezone = timezone('America/Los_Angeles')
+
+        self._tolerance = timedelta(seconds=tdiff_tolerance_secs)
 
         # Read metadata from start of air quality data as lines of {attribute},{value} pairs
         self.metadata = {}
@@ -45,47 +48,28 @@ class AqGpsJoiner:
             self.timezone.normalize(self.timezone.localize(datetime.combine(aq_start_date, aq_start_time)))\
                 .astimezone(utc)
 
-        self._gps_date = None
-        self._gps_time = None
         self._gps_datetime = None
         self._gps_lat = None
         self._gps_lon = None
-        self._gps_is_valid = None
-        self._gps_peekable = peekable(gps_data)
+
+        self._gps_last_datetime = None
+        self._gps_last_lat = None
+        self._gps_last_lon = None
+
+        self._gps_data = iter(gps_data)
 
         # Churn through GPS data until we have established the date and time, and caught up with the AQ start time
         while self._gps_datetime is None or self._gps_datetime < self._aq_start_datetime:
-            gps = self._parse_peek_gps()
-            datestamp = getattr(gps, 'datestamp', None)
-            timestamp = getattr(gps, 'timestamp', None)
-            latitude = getattr(gps, 'latitude', None)
-            longitude = getattr(gps, 'longitude', None)
-            is_valid = getattr(gps, 'is_valid', None)
-            if datestamp is not None:
-                self._gps_date = datestamp
-            if timestamp is not None:
-                self._gps_time = timestamp
-            if latitude is not None:
-                self._gps_lat = latitude
-            if longitude is not None:
-                self._gps_lon = longitude
-            if is_valid is not None:
-                self._gps_is_valid = is_valid
-            if self._gps_date is not None and self._gps_time is not None:
-                self._gps_datetime = utc.normalize(utc.localize(datetime.combine(self._gps_date, self._gps_time)))
-            if self._gps_datetime is None or self._gps_datetime < self._aq_start_datetime:
-                self._gps_peekable.next()
+            self._gps_last_datetime = self._gps_datetime
+            self._gps_last_lat = self._gps_lat
+            self._gps_last_lon = self._gps_lon
+            gps = self._parse_next_gps()
+            self._gps_datetime = utc.normalize(utc.localize(datetime.combine(gps.datestamp, gps.timestamp)))
+            self._gps_lat = gps.latitude
+            self._gps_lon = gps.longitude
 
         # AQ metadata (and terminal blank line) should be followed by normal CSV header
-        self._aq_peekable = peekable(csv.DictReader(aq_itr, delimiter=','))
-
-        # Churn through AQ data until caught up with GPS start time
-        aq_datetime = self._aq_start_datetime
-        while aq_datetime < self._gps_datetime:
-            aq = self._aq_peekable.peek()
-            aq_datetime = self._aq_start_datetime + timedelta(seconds=int(aq['Elapsed Time [s]']))
-            if aq_datetime < self._gps_datetime:
-                self._aq_peekable.next()
+        self._aq_data = csv.DictReader(aq_itr, delimiter=',')
 
         self._output_header = True
 
@@ -97,67 +81,81 @@ class AqGpsJoiner:
         :return: Combined air quality and GPS data as a line of CSV text
         """
         if self._output_header:
-            # TODO(smcclellan): Determine correct output format
             self._output_header = False
             return 'utc,filter,pm,lat,lon,device'
 
-        aq = self._aq_peekable.next()
-        aq_datetime = utc.normalize(self._aq_start_datetime + timedelta(seconds=int(aq['Elapsed Time [s]'])))
+        line = None
+        while line is None:
+            aq = self._aq_data.next()
+            aq_datetime = utc.normalize(self._aq_start_datetime + timedelta(seconds=int(aq['Elapsed Time [s]'])))
 
-        utc_timestamp = calendar.timegm(aq_datetime.utctimetuple())
-        mass = aq['Mass [mg/m3]']
-        errors = aq['Errors']
+            utc_timestamp = calendar.timegm(aq_datetime.utctimetuple())
+            mass = aq['Mass [mg/m3]']
+            errors = aq['Errors']
 
-        while self._gps_datetime < aq_datetime:
-            gps = self._parse_peek_gps()
-            datestamp = getattr(gps, 'datestamp', None)
-            timestamp = getattr(gps, 'timestamp', None)
-            latitude = getattr(gps, 'latitude', None)
-            longitude = getattr(gps, 'longitude', None)
-            is_valid = getattr(gps, 'is_valid', None)
-            if datestamp is not None:
-                self._gps_date = datestamp
-            if timestamp is not None:
-                self._gps_time = timestamp
-            if latitude is not None:
-                self._gps_lat = latitude
-            if longitude is not None:
-                self._gps_lon = longitude
-            if is_valid is not None:
-                self._gps_is_valid = is_valid
-            self._gps_datetime = utc.normalize(utc.localize(datetime.combine(self._gps_date, self._gps_time)))
-            if self._gps_datetime < aq_datetime:
-                self._gps_peekable.next()
+            # TODO(smcclellan): How should this be defined?
+            device = errors or 'A'
 
-        # TODO(smcclellan): How should this be defined?
-        device = "A" if (not errors and self._gps_is_valid) else "E"
+            filt = ''  # TODO(smcclellan): What is this??
 
-        return '{utc},{filter},{pm},{lat},{lon},{device}'.format(
-            utc=utc_timestamp,
-            filter='',  # TODO(smcclellan): What is this??
-            pm=mass,
-            lat=self._gps_lat,
-            lon=self._gps_lon,
-            device=device)
+            while self._gps_datetime < aq_datetime:
+                self._gps_last_datetime = self._gps_datetime
+                self._gps_last_lat = self._gps_lat
+                self._gps_last_lon = self._gps_lon
+                gps = self._parse_next_gps()
+                self._gps_datetime = utc.normalize(utc.localize(datetime.combine(gps.datestamp, gps.timestamp)))
+                self._gps_lat = gps.latitude
+                self._gps_lon = gps.longitude
 
-    def _parse_peek_gps(self):
-        peek = None
-        while not peek:
+            aq_gps_tdiff = abs(self._gps_datetime - aq_datetime)
+            aq_gps_last_tdiff = abs(aq_datetime - self._gps_last_datetime)
+
+            if aq_gps_tdiff <= aq_gps_last_tdiff and aq_gps_tdiff <= self._tolerance:
+                line = '{utc},{filter},{pm},{lat:.6f},{lon:.6f},{device}'.format(
+                    utc=utc_timestamp,
+                    filter=filt,
+                    pm=mass,
+                    lat=self._gps_lat,
+                    lon=self._gps_lon,
+                    device=device)
+            elif aq_gps_last_tdiff <= aq_gps_tdiff and aq_gps_last_tdiff <= self._tolerance:
+                line = '{utc},{filter},{pm},{lat:.6f},{lon:.6f},{device}'.format(
+                    utc=utc_timestamp,
+                    filter=filt,
+                    pm=mass,
+                    lat=self._gps_last_lat,
+                    lon=self._gps_last_lon,
+                    device=device)
+        return line
+
+    def _parse_next_gps(self):
+        gps = None
+        while not gps:
             try:
-                peek = pynmea2.parse(self._gps_peekable.peek().strip())
+                gps = pynmea2.parse(self._gps_data.next().strip())
             except pynmea2.nmea.SentenceTypeError:
-                self._gps_peekable.next()
-        return peek
+                gps = None
+            # Throw out invalid GPS sentences
+            if not getattr(gps, 'is_valid', True):
+                gps = None
+            # Throw out GPS sentences without datestamp, timestamp, latitude, longitude
+            if not (getattr(gps, 'datestamp', None) and
+                    getattr(gps, 'timestamp', None) and
+                    getattr(gps, 'latitude', None) and
+                    getattr(gps, 'longitude', None)):
+                gps = None
+        return gps
 
 
 if __name__ == "__main__":
     aq_file = ''
     gps_file = ''
     output_file = ''
+    tolerance = 1
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'ha:g:o:', ['aq=', 'gps=', 'out='])
+        opts, args = getopt.getopt(sys.argv[1:], 'ha:g:o:t:', ['aq=', 'gps=', 'out=', 'tolerance='])
     except getopt.GetoptError:
-        print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv>'
+        print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 5'
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
@@ -169,8 +167,10 @@ if __name__ == "__main__":
             gps_file = arg
         elif opt in ('-o', '--out'):
             output_file = arg
+        elif opt in ('-t', '--tolerance'):
+            tolerance = int(arg)
 
     with open(aq_file, 'r') as a:
         with open(gps_file, 'r') as g:
             with open(output_file, 'wb') as o:
-                o.writelines("%s\n" % l for l in AqGpsJoiner(a, g))
+                o.writelines("%s\n" % l for l in AqGpsJoiner(a, g, tolerance))
