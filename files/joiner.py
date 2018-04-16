@@ -1,6 +1,7 @@
 import csv
 import getopt
 import sys
+import calendar
 from datetime import datetime, timedelta
 from itertools import takewhile
 
@@ -18,7 +19,7 @@ class AqGpsJoiner:
         :param gps_data: GPS data, should be passed as an iterable containing NMEA sentences
         """
 
-        # Assume Pacific timezone
+        # Assume AQ data uses Pacific timezone
         self.timezone = timezone('America/Los_Angeles')
 
         # Read metadata from start of air quality data as lines of {attribute},{value} pairs
@@ -40,13 +41,16 @@ class AqGpsJoiner:
             datetime.strptime(self.metadata['Test Start Time'], '%I:%M:%S %p').time()
 
         # Starting datetime used for matching GPS records with AQ records
-        self._aq_start_datetime = self.timezone.localize(datetime.combine(aq_start_date, aq_start_time))
+        self._aq_start_datetime =\
+            self.timezone.normalize(self.timezone.localize(datetime.combine(aq_start_date, aq_start_time)))\
+                .astimezone(utc)
 
         self._gps_date = None
         self._gps_time = None
         self._gps_datetime = None
         self._gps_lat = None
         self._gps_lon = None
+        self._gps_is_valid = None
         self._gps_peekable = peekable(gps_data)
 
         # Churn through GPS data until we have established the date and time, and caught up with the AQ start time
@@ -56,6 +60,7 @@ class AqGpsJoiner:
             timestamp = getattr(gps, 'timestamp', None)
             latitude = getattr(gps, 'latitude', None)
             longitude = getattr(gps, 'longitude', None)
+            is_valid = getattr(gps, 'is_valid', None)
             if datestamp is not None:
                 self._gps_date = datestamp
             if timestamp is not None:
@@ -64,8 +69,10 @@ class AqGpsJoiner:
                 self._gps_lat = latitude
             if longitude is not None:
                 self._gps_lon = longitude
+            if is_valid is not None:
+                self._gps_is_valid = is_valid
             if self._gps_date is not None and self._gps_time is not None:
-                self._gps_datetime = utc.localize(datetime.combine(self._gps_date, self._gps_time))
+                self._gps_datetime = utc.normalize(utc.localize(datetime.combine(self._gps_date, self._gps_time)))
             if self._gps_datetime is None or self._gps_datetime < self._aq_start_datetime:
                 self._gps_peekable.next()
 
@@ -92,18 +99,22 @@ class AqGpsJoiner:
         if self._output_header:
             # TODO(smcclellan): Determine correct output format
             self._output_header = False
-            return 'timestamp,mass,latitude,longitude'
+            return 'utc,filter,pm,lat,lon,device'
 
         aq = self._aq_peekable.next()
-        timestamp = self._aq_start_datetime + timedelta(seconds=int(aq['Elapsed Time [s]']))
-        mass = aq['Mass [mg/m3]']
+        aq_datetime = utc.normalize(self._aq_start_datetime + timedelta(seconds=int(aq['Elapsed Time [s]'])))
 
-        while self._gps_datetime < timestamp:
+        utc_timestamp = calendar.timegm(aq_datetime.utctimetuple())
+        mass = aq['Mass [mg/m3]']
+        errors = aq['Errors']
+
+        while self._gps_datetime < aq_datetime:
             gps = self._parse_peek_gps()
             datestamp = getattr(gps, 'datestamp', None)
             timestamp = getattr(gps, 'timestamp', None)
             latitude = getattr(gps, 'latitude', None)
             longitude = getattr(gps, 'longitude', None)
+            is_valid = getattr(gps, 'is_valid', None)
             if datestamp is not None:
                 self._gps_date = datestamp
             if timestamp is not None:
@@ -112,15 +123,22 @@ class AqGpsJoiner:
                 self._gps_lat = latitude
             if longitude is not None:
                 self._gps_lon = longitude
-            self._gps_datetime = datetime.combine(self._gps_date, self._gps_time).replace(tzinfo=utc)
-            if self._gps_datetime < timestamp:
+            if is_valid is not None:
+                self._gps_is_valid = is_valid
+            self._gps_datetime = utc.normalize(utc.localize(datetime.combine(self._gps_date, self._gps_time)))
+            if self._gps_datetime < aq_datetime:
                 self._gps_peekable.next()
 
-        return '{ts},{m},{lat},{lon}'.format(
-            ts=timestamp.strftime('%m/%d/%Y %I:%M:%S %p %Z'),
-            m=mass,
+        # TODO(smcclellan): How should this be defined?
+        device = "A" if (not errors and self._gps_is_valid) else "E"
+
+        return '{utc},{filter},{pm},{lat},{lon},{device}'.format(
+            utc=utc_timestamp,
+            filter='',  # TODO(smcclellan): What is this??
+            pm=mass,
             lat=self._gps_lat,
-            lon=self._gps_lon)
+            lon=self._gps_lon,
+            device=device)
 
     def _parse_peek_gps(self):
         peek = None

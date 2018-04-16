@@ -11,21 +11,23 @@ class TestAqGpsJoiner(unittest.TestCase):
               'Elapsed Time [s],Mass [mg/m3],Alarms,Errors',
               '1,0.001,,',
               '2,0.002,,',
-              '3,0.003,,']
+              '3,0.003,,',
+              '4,0.004,,BAD']
 
-        gps = ['$GPRMC,065957.00,A,0999.000,N,1999.000,W,1.52,155.39,190717,,,',
+        gps = ['$GPRMC,065957.00,A,0900.000,N,1900.000,W,1.52,155.39,190717,,,',
                '$GPRMC,065958.00,A,1000.000,N,2000.000,W,1.52,155.39,190717,,,',
-               '$GPRMC,065959.00,A,1001.000,N,2001.000,W,1.52,155.39,190717,,,',
-               '$GPRMC,070000.00,A,1002.000,N,2002.000,W,1.52,155.39,190717,,,',
-               '$GPRMC,070001.00,A,1003.000,N,2003.000,W,1.52,155.39,190717,,,',
-               '$GPRMC,070002.00,A,1004.000,N,2004.000,W,1.52,155.39,190717,,,']
+               '$GPRMC,065959.00,A,1100.000,N,2100.000,W,1.52,155.39,190717,,,',
+               '$GPRMC,070000.00,A,1200.000,N,2200.000,W,1.52,155.39,190717,,,',
+               '$GPRMC,070001.00,E,1300.000,N,2300.000,W,1.52,155.39,190717,,,',
+               '$GPRMC,070002.00,A,1400.000,N,2400.000,W,1.52,155.39,190717,,,']
 
         joiner = AqGpsJoiner(aq, gps)
 
-        self.assertEqual(joiner.next(), 'timestamp,mass,latitude,longitude')
-        self.assertEqual(joiner.next(), '07/18/2017 11:59:59 PM PDT,0.001,1001.000,2001.000')
-        self.assertEqual(joiner.next(), '07/19/2017 12:00:00 AM PDT,0.002,1002.000,2002.000')
-        self.assertEqual(joiner.next(), '07/19/2017 12:00:01 AM PDT,0.003,1003.000,2003.000')
+        self.assertEqual(joiner.next(), 'utc,filter,pm,lat,lon,device')
+        self.assertEqual(joiner.next(), '1500447599,,0.001,11.0,-21.0,A')
+        self.assertEqual(joiner.next(), '1500447600,,0.002,12.0,-22.0,A')
+        self.assertEqual(joiner.next(), '1500447601,,0.003,13.0,-23.0,E')
+        self.assertEqual(joiner.next(), '1500447602,,0.004,14.0,-24.0,E')
         self.assertRaises(StopIteration, joiner.next)
 
 
