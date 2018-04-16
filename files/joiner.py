@@ -1,7 +1,7 @@
+import calendar
 import csv
 import getopt
 import sys
-import calendar
 from datetime import datetime, timedelta
 from itertools import takewhile
 
