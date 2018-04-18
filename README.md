@@ -11,3 +11,9 @@ jekyll serve
 
 ## View the site
 Open a browser and navigate to: http://127.0.0.1:4000/woaq/
+
+##Jekyll data post convention
+Save your Jekyll data post files in the following format:
+* Filename convention: "YYYY-MM-DD-full_name.markdown"
+* At top of file, include your front matter. "---" followed by YAML info followed by another "---"
+* Then include your post content (TBD)
