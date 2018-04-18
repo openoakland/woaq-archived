@@ -26,6 +26,8 @@ Save your Jekyll data post files in the following format (refer to post dir for 
   * "---"
 * Then include your post content, a brief description of the dataset
 
+Here is an example: https://raw.githubusercontent.com/openoakland/woaq/gh-pages/_posts/2018-04-17-prohibited_truck_routes_edf_spatial.markdown
+
 ## Jekyll Site Information
 
 Templates for individual page layouts live in the _Layouts directory
