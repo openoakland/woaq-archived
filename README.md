@@ -28,4 +28,10 @@ Save your Jekyll data post files in the following format (refer to post dir for 
 
 ## Jekyll Site Information
 
-Post styling on individual data pages (e.g. https://openoakland.github.io/woaq/transportation/2018/04/17/prohibited_truck_routes_edf_spatial.html) is handled by the file in _layouts/data 
+Templates for individual page layouts live in the _Layouts directory
+
+The homepage is is _layouts/data 
+
+Post styling on individual data pages (e.g. https://openoakland.github.io/woaq/transportation/2018/04/17/prohibited_truck_routes_edf_spatial.html) is handled by _layouts/data 
+
+At present, we have no solution for adding custom CSS, though this is quite easy to do. Please review Jekyll documentation prior to starting this and please DO NOT edit the default css in the assets/minima directory. This would put us out of step with the default and make future upgrades to the site difficult.
