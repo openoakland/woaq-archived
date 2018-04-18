@@ -4,6 +4,8 @@
 git clone -b gh-pages --single-branch  https://github.com/openoakland/woaq.git
 
 ### Install jekyll locally
+cd into the woaq directory and:
+
 bundle install
 
 ### Fire up the local server
