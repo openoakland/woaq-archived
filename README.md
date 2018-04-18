@@ -1,15 +1,15 @@
-To install on Mac:
+## To install on Mac:
 
-## Grab the source
+### Grab the source
 git clone -b gh-pages --single-branch  https://github.com/openoakland/woaq.git
 
-## Install jekyll locally
+### Install jekyll locally
 bundle install
 
-## Fire up the local server
+### Fire up the local server
 jekyll serve
 
-## View the site
+### View the site
 Open a browser and navigate to: http://127.0.0.1:4000/woaq/
 
 ## Jekyll data post convention
@@ -26,3 +26,6 @@ Save your Jekyll data post files in the following format (refer to post dir for 
   * "---"
 * Then include your post content (TBD)
 
+## Jekyll Site Information
+
+Post styling on individual data pages (e.g. https://openoakland.github.io/woaq/transportation/2018/04/17/prohibited_truck_routes_edf_spatial.html) is handled by the file in _layouts/data 
