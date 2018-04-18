@@ -1,8 +1,6 @@
 ---
 title: Alameda County Parcels
-categories: 
-	-Land Use
-	-Some other category
+categories: Land Use
 owner: 
 license:
 month: 
