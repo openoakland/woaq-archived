@@ -110,6 +110,7 @@ class AqGpsJoiner:
             aq_gps_last_tdiff = abs(aq_datetime - self._gps_last_datetime)
 
             if aq_gps_tdiff <= aq_gps_last_tdiff and aq_gps_tdiff <= self._tolerance:
+                # The air quality timestamp is closer to the current GPS measurement, and within tolerance
                 line = '{utc},{filter},{pm},{lat:.6f},{lon:.6f},{device}'.format(
                     utc=utc_timestamp,
                     filter=self._filter_size,
@@ -118,6 +119,7 @@ class AqGpsJoiner:
                     lon=self._gps_lon,
                     device=device)
             elif aq_gps_last_tdiff <= aq_gps_tdiff and aq_gps_last_tdiff <= self._tolerance:
+                # The air quality timestamp is closer to the previous GPS measurement, and within tolerance
                 line = '{utc},{filter},{pm},{lat:.6f},{lon:.6f},{device}'.format(
                     utc=utc_timestamp,
                     filter=self._filter_size,
@@ -125,6 +127,9 @@ class AqGpsJoiner:
                     lat=self._gps_last_lat,
                     lon=self._gps_last_lon,
                     device=device)
+                # Otherwise the air quality measurement is not tolerably close to the current or previous GPS
+                # GPS measurement and should be skipped
+
         return line
 
     def _parse_next_gps(self):
@@ -133,15 +138,16 @@ class AqGpsJoiner:
             try:
                 gps = pynmea2.parse(self._gps_data.next().strip())
             except pynmea2.nmea.SentenceTypeError:
+                # Throw out unknown GPS sentence types
                 gps = None
-            # Throw out invalid GPS sentences
             if not getattr(gps, 'is_valid', True):
+                # Throw out invalid GPS sentences
                 gps = None
-            # Throw out GPS sentences without datestamp, timestamp, latitude, longitude
             if not (getattr(gps, 'datestamp', None) and
                     getattr(gps, 'timestamp', None) and
                     getattr(gps, 'latitude', None) and
                     getattr(gps, 'longitude', None)):
+                # Throw out GPS sentences without datestamp, timestamp, latitude, longitude
                 gps = None
         return gps
 
