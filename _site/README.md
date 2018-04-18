@@ -38,4 +38,4 @@ The homepage is is _layouts/data
 
 Post styling on individual data pages (e.g. https://openoakland.github.io/woaq/transportation/2018/04/17/prohibited_truck_routes_edf_spatial.html) is handled by _layouts/data 
 
-At present, we have no solution for adding custom CSS, though this is quite easy to do. Please review Jekyll documentation prior to starting this and please DO NOT edit the default css in the assets/minima directory. This would put us out of step with the default and make future upgrades to the site difficult.
+You will probably want to customize/override default CSS at some stage. Please DO NOT edit the default css in the assets/minima directory. This would put us out of step with the default and make future upgrades to the site difficult. Instead, just add your work to assets/main.scss. This will import the latest from our default theme and let you work on top of that. Please ask Robert if you have any questions.
