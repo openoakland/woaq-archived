@@ -21,6 +21,6 @@ for filename in ./shifts/*.csv; do
     cat yml_src >> post_output
     echo "---" >> post_output
 
-    cat ./placeholder/text.md >> post_output
+    cat _layouts/data.html >> post_output
 done
 echo "done"
