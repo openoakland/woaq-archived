@@ -2,6 +2,7 @@ import csv
 import yaml
 from distutils.dir_util import mkpath
 
+from datetime import datetime
 import pymysql.cursors
 
 # Connect to the database
@@ -29,6 +30,8 @@ try:
         # we want filter size and reading along with time/geo
         fieldnames=['utc', 'filter', 'pm', 'lat', 'lon', 'device']
 
+        d = datetime.now()
+
         for shift in shifts:
             # get the readings that just correspond to this shift
             sql = """
@@ -53,6 +56,10 @@ try:
 
             with open("yml_template/{}.yml".format(shift['name']), 'w') as outfile:
                 data = {
+                    "layout": "post"
+                    "title": shift['name']
+                    "category": "citizen science"
+                    "date": d.strftime("%Y-%m-%d %H:%M:%S")
                     "start_time": shift['utcstart'],
                     "end_time": shift['utcend'],
                     "device": shift['device'],

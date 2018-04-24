@@ -2,3 +2,4 @@ dump/*
 mysqldata/*
 shifts/*
 *.txt
+yml_template/*
