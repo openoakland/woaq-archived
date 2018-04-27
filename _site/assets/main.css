@@ -194,3 +194,9 @@ table td { border: 1px solid #e8e8e8; }
 .highlight .vg { color: #008080; }
 .highlight .vi { color: #008080; }
 .highlight .il { color: #099; }
+
+.categories-list { float: left; width: 30%; }
+
+.posts-list { float: right; width: 55%; }
+
+.paginator-links { clear: both; width: 100%; align: center; }

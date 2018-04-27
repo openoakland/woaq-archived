@@ -3,41 +3,63 @@ layout: default
 ---
 
 <div class="home">
-
-## Main List
-
-<ul>
-{% for post in paginator.posts %}
-  <li>
-    <h3>
-      <a class="post-link" href="{{ post.url | relative_url }}">
-        {{ post.title | escape }}
-      </a>
-    </h3>
-      {{ post.categories }}
-    {%- if site.show_excerpts -%}
-      {{ post.excerpt }}
-    {%- endif -%}
-  </li>
-{% endfor %}
-</ul>
-
-## Paginator Link
-
-
-{% if paginator.total_pages > 1 %}
-<ul>
-  {% if paginator.previous_page %}
-  <li>
-    <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}">Newer</a>
-  </li>
-  {% endif %}
-  {% if paginator.next_page %}
-  <li>
-    <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Older</a>
-  </li>
-  {% endif %}
-</ul>
-{% endif %}
-
+  <div class="autopages-meta">
+{% if page.autopages %}<b>{{page.autopage.display_name}}</b> Page {{page.pagination_info.curr_page}} of {{page.pagination_info.total_pages}}{% endif %}
+  </div>
+  <div class="categories-list">
+    <h2>Categories</h2>
+    <ul>
+      {% if page.autopages %}
+        <li><a href="{{ "/" | relative_url }}">All Data</a></li>
+      {% endif %}
+      {% assign categories_list = site.categories %}
+      {% if categories_list.first[0] == null %}
+        {% for category in categories_list %}
+          <li><a href="{{ "/" | relative_url }}category/{{ category }}">{{ category }} ({{ site.tags[category].size }})</a></li>
+        {% endfor %}
+      {% else %}
+        {% for category in categories_list %}
+          <li><a href="{{ "/" | relative_url }}category/{{ category[0] }}">{{ category[0] }} ({{ category[1].size }})</a></li>
+        {% endfor %}
+      {% endif %}
+      {% assign categories_list = nil %}
+    </ul>
+  </div>
+  <div class="posts-list">
+    <h2>Datasets</h2>
+    <ul>
+      {% for post in paginator.posts %}
+      <li>
+        <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
+        {{ post.owner }}
+        {{ post.year }}
+        {{ post.license }}
+        <ul>
+        {% for category in post.categories %}
+          <li><a href="category/{{ category }}">{{ category }}</a></li>
+        {% endfor %}
+      </ul>
+        {%- if site.show_excerpts -%}
+          {{ post.excerpt }}
+        {%- endif -%}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="paginator-links">
+    {% if paginator.total_pages > 1 %}
+    <ul>
+      {% if paginator.previous_page %}
+      <li>
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}">Previous</a>
+      </li>
+      {% endif %}
+      {% if paginator.next_page %}
+      <li>
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+    {% endif %}
+  </div>
 </div>

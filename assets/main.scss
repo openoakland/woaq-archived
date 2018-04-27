@@ -3,3 +3,18 @@
 
 @import "minima";
 
+.categories-list {
+  float:left;
+  width:30%;
+}
+
+.posts-list {
+  float:right;
+  width:55%;
+}
+
+.paginator-links {
+  clear:both;
+  width:100%;
+  align:center;
+}
