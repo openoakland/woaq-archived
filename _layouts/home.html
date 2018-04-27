@@ -39,7 +39,7 @@ layout: default
         {% endif %}   
         <ul class="post-categories">
         {% for category in post.categories %}
-          <li class="category">Category: <a href="category/{{ category }}">{{ category }}</a></li>
+          <li class="category">Category: <a href="{{ "/" | relative_url }}category/{{ category }}">{{ category }}</a></li>
         {% endfor %}
       </ul>
         {%- if site.show_excerpts -%}
