@@ -13,8 +13,35 @@
   width:55%;
 }
 
+.posts-list ul.post-listing {
+  list-style-type: none;
+  margin-left:0px;
+}
+
+.posts-list ul.post-listing li.post {
+  clear:both;
+  display:block;
+  margin-top:10px;
+  border-bottom:1px solid #eee; 
+}
+
+.posts-list ul.post-listing li h3 a.post-link {
+  font-size: 16px;
+  font-weight:bold;
+}
+
+ul.post-categories {
+  margin-left:0px;
+  margin-bottom:15px;
+}
+
+li.category {
+  display:inline;
+}
+
 .paginator-links {
   clear:both;
   width:100%;
   align:center;
 }
+

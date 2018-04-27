@@ -3,15 +3,10 @@ layout: default
 ---
 
 <div class="home">
-  <div class="autopages-meta">
-{% if page.autopages %}<b>{{page.autopage.display_name}}</b> Page {{page.pagination_info.curr_page}} of {{page.pagination_info.total_pages}}{% endif %}
-  </div>
   <div class="categories-list">
     <h2>Categories</h2>
     <ul>
-      {% if page.autopages %}
-        <li><a href="{{ "/" | relative_url }}">All Data</a></li>
-      {% endif %}
+      <li><a href="{{ "/" | relative_url }}">All Data ({{ site.posts.size }})</a></li>
       {% assign categories_list = site.categories %}
       {% if categories_list.first[0] == null %}
         {% for category in categories_list %}
@@ -27,16 +22,24 @@ layout: default
   </div>
   <div class="posts-list">
     <h2>Datasets</h2>
-    <ul>
+    <div class="autopages-meta">
+      {% if page.autopages %}
+        <strong>{{page.autopage.display_name}}</strong>
+      {% endif %}
+    </div>
+    <ul class="post-listing">
       {% for post in paginator.posts %}
-      <li>
+      <li class="post">
         <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
-        {{ post.owner }}
-        {{ post.year }}
-        {{ post.license }}
-        <ul>
+        {% if post.owner %}
+          Owner: {{ post.owner }} <br />
+        {% endif %}
+        {% if post.year %}  
+          Year: {{ post.year }} <br />
+        {% endif %}   
+        <ul class="post-categories">
         {% for category in post.categories %}
-          <li><a href="category/{{ category }}">{{ category }}</a></li>
+          <li class="category">Category: <a href="category/{{ category }}">{{ category }}</a></li>
         {% endfor %}
       </ul>
         {%- if site.show_excerpts -%}
@@ -48,6 +51,7 @@ layout: default
   </div>
   <div class="paginator-links">
     {% if paginator.total_pages > 1 %}
+    Page {{page.pagination_info.curr_page}} of {{page.pagination_info.total_pages}}
     <ul>
       {% if paginator.previous_page %}
       <li>
