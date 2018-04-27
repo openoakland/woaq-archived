@@ -1,6 +1,6 @@
 ---
 title: Caltrans Right Of Way Parcels
-categories: Land Use
+categories: LandUse
 owner: City of Oakland
 license:
 month: 

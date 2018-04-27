@@ -3,7 +3,5 @@ title: Prohibited Truck Routes
 location: EDF Spatial Data
 fileName: Prohibited_Truck_Routes.zip
 layout: data
-categories: transportation
+categories: Transportation
 ---
-
-Description of this dataset goes here.

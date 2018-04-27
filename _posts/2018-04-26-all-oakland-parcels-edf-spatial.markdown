@@ -1,6 +1,6 @@
 ---
 title: All Oakland Parcels
-categories: Land Use
+categories: LandUse
 owner: 
 license:
 month: 

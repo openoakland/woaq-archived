@@ -1,6 +1,6 @@
 ---
 title: Zoning
-categories: Land Use
+categories: LandUse
 owner: City of Oakland
 license:
 month: 

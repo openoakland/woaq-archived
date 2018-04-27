@@ -1,6 +1,6 @@
 ---
 title: Point Source Pollution
-categories: Air Pollution
+categories: AirPollution
 owner: BAAQMD
 license:
 month: 

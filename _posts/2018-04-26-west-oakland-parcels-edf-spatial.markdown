@@ -1,6 +1,6 @@
 ---
 title: West Oakland Parcels
-categories: Land Use
+categories: LandUse
 owner: 
 license:
 month: 

@@ -1,6 +1,6 @@
 ---
 title: Residential & Commercial Parcels
-categories: Land Use
+categories: LandUse
 owner: Alameda County
 license:
 month: 

@@ -1,6 +1,6 @@
 ---
 title: Freeway Pollution
-categories: Air Pollution
+categories: AirPollution
 owner: BAAQMD
 license:
 month: 

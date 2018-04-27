@@ -1,6 +1,6 @@
 ---
 title: Contaminated Sites
-categories: Soil Pollution
+categories: SoilPollution
 owner: Envirostor
 license:
 month: 

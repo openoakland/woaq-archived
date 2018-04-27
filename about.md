@@ -2,6 +2,7 @@
 layout: page
 title: About
 permalink: /about/
+hidden: true
 ---
 
 This project is in support of an environmental justice group in West Oakland, the West Oakland Environmental Indicators Project (WOEIP).

@@ -1,6 +1,6 @@
 ---
 title: Lead Pollution
-categories: Soil Pollution
+categories: SoilPollution
 owner: Envirostor
 license:
 month: 

@@ -1,6 +1,6 @@
 ---
 title: CalEnviroScreen
-categories: Environmental Health
+categories: EnvironmentalHealth
 owner: CalEPA
 license:
 month: 
@@ -9,5 +9,3 @@ location: AdaptOaklandMaps
 fileName: Cal_enviroscreen.json
 layout: data
 ---
-
-

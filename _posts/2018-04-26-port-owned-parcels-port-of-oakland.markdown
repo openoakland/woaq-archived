@@ -1,6 +1,6 @@
 ---
 title: Port Owned Parcels
-categories: Land Use
+categories: LandUse
 owner: Port of Oakland
 license:
 month: 
