@@ -36,4 +36,4 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 baseurl: /woaq
-
+mapbox-token: pk.eyJ1IjoiZnJlaWphIiwiYSI6ImNqM3FjajEycDAwbmYycW1rZDZ3Y3ZmaDgifQ.gG6EIJvRcdlHGtyaF7vyrw
