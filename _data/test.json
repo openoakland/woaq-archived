@@ -1,0 +1,13 @@
+{
+    "type": "Feature",
+    "properties": {
+        "message": "CAT Truck Scales"
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -122.288404,
+            37.802495
+        ]
+    }
+}
