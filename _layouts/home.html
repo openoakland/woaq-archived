@@ -32,7 +32,7 @@ layout: default
       <li class="post">
         <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
         {% if post.owner %}
-          Owner: {{ post.owner }} <br />
+          Source: {{ post.owner }} <br />
         {% endif %}
         {% if post.year %}  
           Year: {{ post.year }} <br />
@@ -48,22 +48,22 @@ layout: default
       </li>
       {% endfor %}
     </ul>
-  </div>
   <div class="paginator-links">
     {% if paginator.total_pages > 1 %}
-    Page {{page.pagination_info.curr_page}} of {{page.pagination_info.total_pages}}
+    <strong>Page {{page.pagination_info.curr_page}} of {{page.pagination_info.total_pages}}</strong>
     <ul>
       {% if paginator.previous_page %}
-      <li>
+      <li class="previous-link">
         <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}">Previous</a>
       </li>
       {% endif %}
       {% if paginator.next_page %}
-      <li>
+      <li class="next-link">
         <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Next</a>
       </li>
       {% endif %}
     </ul>
     {% endif %}
+  </div>
   </div>
 </div>

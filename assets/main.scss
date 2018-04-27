@@ -39,9 +39,14 @@ li.category {
   display:inline;
 }
 
-.paginator-links {
-  clear:both;
-  width:100%;
-  align:center;
+.paginator-links ul {
+  margin-left:0px;
 }
+
+li.next-link,
+li.previous-link {
+  display:inline;
+  margin-right:15px;
+}
+
 
