@@ -50,7 +50,7 @@ layout: default
     </ul>
   <div class="paginator-links">
     {% if paginator.total_pages > 1 %}
-    <strong>Page {{page.pagination_info.curr_page}} of {{page.pagination_info.total_pages}}</strong>
+    <strong>Page {{paginator.page}} of {{paginator.total_pages}}</strong>
     <ul>
       {% if paginator.previous_page %}
       <li class="previous-link">
