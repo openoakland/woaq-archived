@@ -167,7 +167,7 @@ if __name__ == "__main__":
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'test.py -i <inputfile> -o <outputfile>'
+            print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 1 -f 2.5'
             sys.exit()
         elif opt in ('-a', '--aq'):
             aq_file = arg
