@@ -44,7 +44,7 @@ class AqGpsJoiner:
         aq_start_date = datetime.strptime(self._metadata['Test Start Date'], '%m/%d/%Y').date()
 
         # E.g. 12:40:35 PM
-        aq_start_time =\
+        aq_start_time = \
             datetime.strptime(self._metadata['Test Start Time'], '%I:%M:%S %p').time()
 
         # Starting datetime used for matching GPS records with AQ records
