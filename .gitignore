@@ -1,4 +1,7 @@
 dump/*
 mysqldata/*
 shifts/*
-*.txt
+env/*
+.idea/*
+
+*.iml
