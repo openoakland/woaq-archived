@@ -3,3 +3,4 @@ mysqldata/*
 shifts/*
 *.txt
 yml_template/*
+!requirements.txt
