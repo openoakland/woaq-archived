@@ -161,12 +161,13 @@ if __name__ == "__main__":
     tolerance = 1
     filt = '2.5'
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'ha:g:o:t:f:', ['aq=', 'gps=', 'out=', 'tolerance=', 'filter='])
+        opts, args = \
+            getopt.getopt(sys.argv[1:], 'ha:g:o:t:f:', ['help', 'aq=', 'gps=', 'out=', 'tolerance=', 'filter='])
     except getopt.GetoptError:
-        print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 1 -f 2.5'
-        sys.exit(2)
+        print 'Expected usage: joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 1 -f 2.5'
+        raise
     for opt, arg in opts:
-        if opt == '-h':
+        if opt in ('-h', '--help'):
             print 'joiner.py -a <air-quality-file.csv> -g <gps-file.log> -o <output.csv> -t 1 -f 2.5'
             sys.exit()
         elif opt in ('-a', '--aq'):
