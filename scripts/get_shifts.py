@@ -7,7 +7,7 @@ import pymysql.cursors
 
 import getopt
 
-def get_shifts(csv_dir, yml_dir):
+def get_shifts(posts_dir, csv_dir="./shifts/"):
 
     # Connect to the database
     connection = pymysql.connect(host='localhost',
@@ -18,7 +18,7 @@ def get_shifts(csv_dir, yml_dir):
 
     # create the output directory
     mkpath(csv_dir)
-    mkpath(yml_dir)
+    mkpath(posts_dir)
 
     try:
         shifts = []
@@ -59,7 +59,11 @@ def get_shifts(csv_dir, yml_dir):
                         filters.add(str(row["filter"]))
                         writer.writerow(row)
 
-                with open("{}/{}.yml".format(yml_dir, shift['name']), 'w') as outfile:
+                with open("{}/{}-{}.markdown".format(
+                        posts_dir,
+                        d.strftime("%Y-%m-%d")
+                        shift['name']), 'w') as outfile:
+                    outfile.write("---\n")
                     data = {
                         "layout": "post",
                         "title": shift['name'],
@@ -69,26 +73,38 @@ def get_shifts(csv_dir, yml_dir):
                         "end_time": shift['utcend'],
                         "device": shift['device'],
                         "filter": list(filters)
+                        "fileName": \
+                            "http://s3-us-west-2.amazonaws.com/{}/{}.csv".format(
+                                "openoakland-woaq",
+                                shift['name']
+                            )
                     }
                     yaml.dump(data, outfile, default_flow_style=False)
+                    outfile.write("---\n")
     finally:
         connection.close()
 
-try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hc:y:', ['help', 'csv=', 'yml='])
+if __name__== '__main__':
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'hc:p:', ['help', 'csv=', 'post='])
 
-except getopt.GetoptError:
-    print 'scripts/get_shifts.py -csv <csv_output_path> -yml <yml_output_path>'
-    sys.exit(2)
-
-for opt, args in opts:
-    if opt in ('-h', '--h'):
+    except getopt.GetoptError:
         print 'scripts/get_shifts.py -csv <csv_output_path> -yml <yml_output_path>'
-        sys.exit()
-    elif opt in ('-c', '-csv'):
-        csv_output = arg
-    elif opt in ('-y', '-yml'):
-        yml_output = arg
+        sys.exit(2)
 
-get_shifts(csv_output, yml_output)
+    default_csv_dir = True
+    for opt, arg in opts:
+        if opt in ('-h', '--h', '--help'):
+            print 'scripts/get_shifts.py -csv <csv_output_path> -yml <yml_output_path>'
+            sys.exit()
+        if opt in ('-c','-csv', '--c', '--csv'):
+            default_csv_dir = False
+            csv_dir = arg
+        if opt in ('-p', '-post', '--p', '--posts'):
+            post_dir = arg
+
+    if default_csv_dir:
+        get_shifts(post_dir)
+    else:
+        get_shifts(post_dir, csv_dir)
 
