@@ -1,11 +1,11 @@
 import csv
+import getopt
+import pymysql.cursors
+import sys
 import yaml
-from distutils.dir_util import mkpath
 
 from datetime import datetime
-import pymysql.cursors
-
-import getopt
+from distutils.dir_util import mkpath
 
 def get_shifts(posts_dir, csv_dir="./shifts/"):
 
@@ -40,7 +40,7 @@ def get_shifts(posts_dir, csv_dir="./shifts/"):
                 shift["name"] = shift["name"].replace(" ", "_").replace(",", "_")
                 # get the readings that just correspond to this shift
                 sql = """
-                    select utc, filter, pm, lat, lon, device
+                    select utc, filter, pm, lat, lon, device, 
                     from pmgpsinnerview
                     where device=%s
                     and utc >= %s
@@ -61,18 +61,18 @@ def get_shifts(posts_dir, csv_dir="./shifts/"):
 
                 with open("{}/{}-{}.markdown".format(
                         posts_dir,
-                        d.strftime("%Y-%m-%d")
+                        d.strftime("%Y-%m-%d"),
                         shift['name']), 'w') as outfile:
                     outfile.write("---\n")
                     data = {
                         "layout": "post",
                         "title": shift['name'],
-                        "category": "citizen science",
+                        "category": "citizenscience",
                         "date": d.strftime("%Y-%m-%d %H:%M:%S"),
                         "start_time": shift['utcstart'],
                         "end_time": shift['utcend'],
                         "device": shift['device'],
-                        "filter": list(filters)
+                        "filter": list(filters),
                         "fileName": \
                             "http://s3-us-west-2.amazonaws.com/{}/{}.csv".format(
                                 "openoakland-woaq",
