@@ -13,3 +13,11 @@ for pref in `ls shifts  | cut -c1-10 | uniq`; do
     done
     echo $pref
 done
+
+
+# this is terrible, i know.
+cd shift_by_month
+
+for file in *; do
+    mv -- "$file" "${file//[/}.csv"
+done
