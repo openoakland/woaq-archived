@@ -14,15 +14,16 @@ for file in `ls ./shift_by_month`; do
     MONTH=`echo $base | cut -c6-7`
 
     # Write yaml file line by line
-    echo "---" > $md_file
-    echo "title: Citizen Science ${MONTH}-${YEAR}" >> $md_file
-    echo "owner: WOEIP" >> $md_file
-    echo "layout: data" >> $md_file
-    echo "month: ${MONTH}" >> $md_file
-    echo "year: ${YEAR}" >> $md_file
-    echo "categories: citizenScience" >> $md_file
-    echo "fileName: <a href=\"http://s3-us-west-2.amazonaws.com/openoakland-woaq/shift_by_month/$file\">CSV here</a>" \
-        >> $md_file
-    echo "---" >> $md_file
+    cat <<EOF  >$md_file
+---
+title: Citizen Science ${MONTH}-${YEAR}
+owner: WOEIP
+layout: data
+month: ${MONTH}
+year: ${YEAR}
+categories: citizenScience
+fileName: <a href=\"http://s3-us-west-2.amazonaws.com/openoakland-woaq/shift_by_month/$file\">CSV here</a>
+---
+EOF
 
 done
