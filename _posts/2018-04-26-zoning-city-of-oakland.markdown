@@ -1,12 +1,11 @@
 ---
-title: Zoning
+title: Oakland Zoning
 categories: LandUse
 owner: City of Oakland
 license:
-month: 
+month:
 year: 2015
 location: AdaptOaklandMaps
-fileName: Zoning.json
+fileName: Oakland_zoning.geojson
 layout: data
 ---
-

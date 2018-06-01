@@ -1,12 +1,11 @@
 ---
-title: Designated Truck Routes
+title: Oakland designated Truck Routes
 categories: Transportation
-owner: 
+owner:
 license:
-month: 
-year: 
+month:
+year:
 location: EDF Spatial Data
-fileName: Designated_Truck_Routes.zip
+fileName: Oakland_designated_truck_routes.geojson
 layout: data
 ---
-

@@ -1,7 +1,11 @@
 ---
 title: Prohibited Truck Routes
-location: EDF Spatial Data
-fileName: Prohibited_Truck_Routes.zip
-layout: data
 categories: Transportation
+owner:
+license:
+month:
+year:
+location: EDF Spatial Data
+fileName: Oakland_prohibited_truck_routes.geojson
+layout: data
 ---

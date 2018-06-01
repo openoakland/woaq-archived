@@ -1,12 +1,11 @@
 ---
-title: All Oakland Parcels
+title: Oakland County Roads
 categories: LandUse
-owner: 
+owner:
 license:
-month: 
+month:
 year: 
 location: EDF Spatial Data
-fileName: AllOakland_Parcels.zip
+fileName: Oakland_county_roads.geojson
 layout: data
 ---
-
