@@ -22,9 +22,26 @@ This data was collected in a series of surveyor shifts in which a surveyor colle
 
 ### Generating the files
 
-Simply run `python get_shifts.py`. It will create a directory called "shifts" and then save a bunch of CSV files in it.
+
+```bash
+docker-compose up
+
+#creates a directory called 'shifts' and writes CSVs to it
+python scripts/get_shifts.py
+```
+
 
 The name of each CSV file designates the device name (A, B, etc) and the expected range of readings, for reference. Columns include timestamp, lat/long, the filter size used on this shift, and PM (particulate matter) reading.
 
 Orphaned PM and GPS data is *not* included. That is, only readings that contain both PM and lat/long will be present in these files.
+
+
+
+```bash
+# merges shifts from the same month into the shift_by_month directory
+scripts/get_shift_by_month.sh
+
+# Generates markdown pages for jekyll. Writes them to _posts
+scripts/make_markdown.sh
+```
 
