@@ -1,0 +1,10 @@
+---
+title: Citizen Science 06-2010
+owner: WOEIP
+layout: data
+month: 06
+year: 2010
+categories: citizenScience
+resourceType: shift_by_month
+fileName: 2010-06.csv
+---

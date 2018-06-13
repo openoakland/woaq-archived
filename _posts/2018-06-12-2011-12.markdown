@@ -1,0 +1,10 @@
+---
+title: Citizen Science 12-2011
+owner: WOEIP
+layout: data
+month: 12
+year: 2011
+categories: citizenScience
+resourceType: shift_by_month
+fileName: 2011-12.csv
+---
