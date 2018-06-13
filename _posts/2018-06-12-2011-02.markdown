@@ -1,10 +1,10 @@
 ---
-title: Citizen Science 02-2011
-owner: WOEIP
+title: WOEIP Air Quality 02-2011
+owner: <a href="https://www.woeip.org/">WOEIP</a>
 layout: data
 month: 02
 year: 2011
-categories: CitizenScience
+categories: WOEIP
 resourceType: shift_by_month
 fileName: 2011-02.csv
 ---
