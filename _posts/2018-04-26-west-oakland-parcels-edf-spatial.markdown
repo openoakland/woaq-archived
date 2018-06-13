@@ -1,12 +1,11 @@
 ---
 title: West Oakland Parcels
 categories: LandUse
-owner: 
+owner:
 license:
-month: 
-year: 
+month:
+year:
 location: EDF Spatial Data
-fileName: WestOakland_Parcels.zip
+fileName: WestOakland_parcels.geojson
 layout: data
 ---
-
