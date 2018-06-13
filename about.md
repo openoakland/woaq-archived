@@ -5,27 +5,19 @@ permalink: /about/
 hidden: true
 ---
 
-This project is in support of an environmental justice group in West Oakland, the West Oakland Environmental Indicators Project (WOEIP).
+The community of West Oakland is surrounded by several major air polluters. Several freeways run through the neighborhood, and ships and trucks going in and out of the Port of Oakland put exhaust into the local air several times every day. Local residents report higher rates of cancer and respiratory problems as a result. Since the early 2000's, the West Oakland Environmental Indicators Project has been advocating for cleaner air in the West Oakland community through community-based citizen science.
 
-[Website](http://woeip.org/)
+WOEIP has many years worth of block-by-block air quality data collected by their many dedicated volunteers using low cost shoulder-mounted air quality sensors. Volunteers receive extensive training on accurate equipment calibration and reporting process, and donate a day to walking around the neighborhood, gathering readings on particulate matter in the air. This form of citizen science educates and engages the local community in air quality activism, and provides a needed check on City and Port air quality reports.
 
-[Github]( https://github.com/openoakland/woaq/ )
+This project is a joint effort of Open Oakland (a Code For America brigade) and WOEIP to make this important data, as well as related partner data, available and comprehensible to environmental justice advocates and members of the community. Check back for updates as this site is under development.
 
-[video](https://www.youtube.com/watch?time_continue=143&v=KThvnkzSatU )
+[Learn About WOEIP](https://www.youtube.com/watch?time_continue=143&v=KThvnkzSatU)
 
-WOEIP has been advocating for cleaner air in their community since the early 00’s.
+[WOEIP Site](http://woeip.org/)
 
-Read more about air quality issues in West Oakland: https://www.edf.org/airqualitymaps/pollution-and-health-concerns-west-oakland
+[Project Github](https://github.com/openoakland/woaq/)
 
-Also have a look at EDF’s policy proposals to get a sense of the agenda:
-https://www.edf.org/airqualitymaps/policies-reduce-pollution-and-protect-health
+[More on West Oakland Air Quality from the EDF](https://www.edf.org/airqualitymaps/pollution-and-health-concerns-west-oakland)
 
-A key component of their strategy has been citizen science approaches to monitoring air quality. They have low-cost sensors that they provide to residents for guided air quality tours of the neighborhood.
-
-The citizen science approach serves two goals:
-Involves the community in air quality issues, helps with education and mobilization
-Provides an independent check on data coming from the City and the Port
-
-Over the years, a lot of air quality data has been collected both by WOEIP but by other partners at EDF and elsewhere. In addition, there are various other studies that have been conducted on health impacts, truck counts through West Oakland neighborhoods, etc. Existing data on topics like land use and zoning, idling citations, community resources like schools and the senior center would also be useful in developing a picture of the issue.  Unfortunately, this data is scattered all over and not managed or stored in a way that is usable. Previous efforts by outside volunteers and researchers working with WOEIP have not been successful at building the organization’s capacity or infrastructure use this data themselves or with assistance from technical partners.
-
+[EDF Air Quality Policy Proposals](https://www.edf.org/airqualitymaps/policies-reduce-pollution-and-protect-health)
 
