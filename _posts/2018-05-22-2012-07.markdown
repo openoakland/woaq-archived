@@ -1,0 +1,9 @@
+---
+title: Citizen Science 07-2012
+owner: WOEIP
+layout: data
+month: 07
+year: 2012
+categories: citizenScience
+fileName: <a href="http://s3-us-west-2.amazonaws.com/openoakland-woaq/shift_by_month/2012-07.csv">CSV here</a>
+---
