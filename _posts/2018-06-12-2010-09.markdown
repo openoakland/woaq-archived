@@ -4,7 +4,7 @@ owner: WOEIP
 layout: data
 month: 09
 year: 2010
-categories: citizenScience
+categories: CitizenScience
 resourceType: shift_by_month
 fileName: 2010-09.csv
 ---

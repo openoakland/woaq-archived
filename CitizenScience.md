@@ -1,7 +1,7 @@
 ---
 layout: category
 title: Citizen Science
-tag: citizenScience
+tag: CitizenScience
 permalink: /category/CitizenScience
 hidden: true
 ---
