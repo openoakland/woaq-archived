@@ -43,4 +43,4 @@ mapbox-token: pk.eyJ1IjoiZnJlaWphIiwiYSI6ImNqM3FjajEycDAwbmYycW1rZDZ3Y3ZmaDgifQ.
 paginate: 10
 paginate_path: "/page:num/"
 
-s3_bucket: "http://s3-us-west-2.amazonaws.com/openoakland-woaq"
+s3_bucket: "https://s3-us-west-2.amazonaws.com/openoakland-woaq"
