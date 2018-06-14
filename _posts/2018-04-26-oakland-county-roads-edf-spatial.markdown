@@ -1,10 +1,10 @@
 ---
 title: Oakland County Roads
-categories: LandUse
-owner:
+categories: Transportation
+owner: EDF
 license:
 month:
-year: 
+year:
 location: EDF Spatial Data
 fileName: Oakland_county_roads.geojson
 layout: data

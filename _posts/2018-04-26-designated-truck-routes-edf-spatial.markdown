@@ -1,7 +1,7 @@
 ---
 title: Oakland designated Truck Routes
 categories: Transportation
-owner:
+owner: EDF
 license:
 month:
 year:
