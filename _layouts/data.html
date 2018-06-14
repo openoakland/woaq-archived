@@ -13,12 +13,16 @@ layout: default
     <strong>Year:</strong> {{ page.year }} <br />
     <strong>License:</strong> {{ page.license }} <br />
     <strong>Categories:</strong> {{ page.categories }} <br />
-    <strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>here</a> <br/>
+    <strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>
     
     {{ content }}
-    
+   
   </div>
   
+  {% capture file_loc %}
+    {{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}
+  {% endcapture %}
+    
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
 
@@ -37,10 +41,10 @@ layout: default
   map.on('load', function () {
       map.addLayer({
           "id": "points",
-          "type": "circle",
+          "type": "fill",
           "source": {
               "type": "geojson",
-              "data": {{site.data.test|jsonify}}
+              "data": {{file_loc|jsonify}}
         }
      });
   });

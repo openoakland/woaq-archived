@@ -6,6 +6,7 @@ license:
 month:
 year:
 location: EDF Spatial Data
+resourceType: geojson
 fileName: Oakland_county_roads.geojson
 layout: data
 ---

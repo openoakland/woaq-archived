@@ -6,6 +6,7 @@ license:
 month:
 year:
 location: EDF Spatial Data
+resourceType: geojson
 fileName: WestOakland_truckrelated_businesses.geojson
 layout: data
 ---
