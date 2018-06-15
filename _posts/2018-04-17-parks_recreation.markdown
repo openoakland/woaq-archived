@@ -6,7 +6,7 @@ license:
 month:
 year: 2015
 resourceType: geojson
-fileName: parks_recreation.geojson
+fileName: parks_recreation_facilities.geojson
 geoType: circle
 layout: data
 ---
