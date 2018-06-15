@@ -6,7 +6,7 @@ license:
 month:
 year: 2017
 resourceType: geojson
-fileName: ces-woak.geojson
+fileName: ces_woak.geojson
 geoType: fill
 layout: data
 ---
