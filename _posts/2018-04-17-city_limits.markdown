@@ -6,7 +6,7 @@ license:
 month:
 year: 2015
 resourceType: geojson
-fileName: city_limits.geojson
+fileName: city-limits.geojson
 geoType: fill
 layout: data
 ---
