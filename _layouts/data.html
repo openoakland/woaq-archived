@@ -43,12 +43,14 @@ layout: default
   });
 
   $(document).ready(function() {
-      $.ajax({
-          type: "GET",
-          url: '{{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}',
-          dataType: "text",
-          success: function(csvData) {makeGeoJSON(csvData);}
-       });
+      if ("{{page.resourceType}}" == 'shift_by_month') {
+        $.ajax({
+            type: "GET",
+            url: '{{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}',
+            dataType: "text",
+            success: function(csvData) {makeGeoJSON(csvData);}
+         });
+      }
   });
 
   map.on('load', function () {
@@ -81,7 +83,7 @@ layout: default
                 },
                 'paint': {}
             });
-        });    
+        });
     });
   }
 
