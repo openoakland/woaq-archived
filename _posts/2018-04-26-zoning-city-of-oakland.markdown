@@ -8,5 +8,6 @@ year: 2015
 resourceType: geojson
 location: AdaptOaklandMaps
 fileName: Oakland_zoning.geojson
+geoType: fill
 layout: data
 ---

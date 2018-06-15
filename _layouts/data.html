@@ -41,7 +41,7 @@ layout: default
   map.on('load', function () {
       map.addLayer({
           "id": "points",
-          "type": "fill",
+          "type": "{{page.geoType}}",
           "source": {
               "type": "geojson",
               "data": {{file_loc|jsonify}}

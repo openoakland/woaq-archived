@@ -8,5 +8,6 @@ year:
 location: EDF Spatial Data
 resourceType: geojson
 fileName: WestOakland_truckrelated_businesses.geojson
+geoType: circle
 layout: data
 ---

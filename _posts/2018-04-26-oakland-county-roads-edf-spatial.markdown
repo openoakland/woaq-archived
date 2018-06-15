@@ -8,5 +8,6 @@ year:
 location: EDF Spatial Data
 resourceType: geojson
 fileName: Oakland_county_roads.geojson
+geoType: line
 layout: data
 ---

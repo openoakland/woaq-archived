@@ -1,0 +1,13 @@
+---
+title: Parks and Recreation Facilities
+categories: CommunityAssets
+owner: City of Oakland
+license:
+month:
+year: 2015
+resourceType: geojson
+fileName: parks_recreation.geojson
+geoType: circle
+layout: data
+---
+Source: https://data.oaklandnet.com/

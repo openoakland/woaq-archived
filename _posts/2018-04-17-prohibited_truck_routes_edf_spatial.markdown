@@ -8,5 +8,7 @@ year:
 location: EDF Spatial Data
 resourceType: geojson
 fileName: Oakland_prohibited_truck_routes.geojson
+geoType: line
 layout: data
 ---
+Source: https://data.oaklandnet.com/
