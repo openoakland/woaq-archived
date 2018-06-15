@@ -1,0 +1,13 @@
+---
+title: California EnviroScreen
+categories: SoilPollution, AirPollution
+owner: CalEnviroScreen
+license:
+month:
+year: 2015
+resourceType: geojson
+fileName: ces.geojson
+geoType: fill
+layout: data
+---
+Source: https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30
