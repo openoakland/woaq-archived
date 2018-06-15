@@ -1,6 +1,6 @@
 ---
 title: California EnviroScreen
-categories: SoilPollution, AirPollution
+categories: SoilPollution AirPollution
 owner: CalEnviroScreen
 license:
 month:
