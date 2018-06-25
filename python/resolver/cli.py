@@ -8,7 +8,6 @@ if __name__ == '__main__':
     #       relation initialization components. It will, once initialized
     #       also call the transform and load processes, enabling
     #       command-line scripted ETL process abstraction.
-    print('WIP')
 
     # Some presets just for dev purposes
     parent_dir = os.path.join('woaq', 'to_join')
@@ -16,4 +15,4 @@ if __name__ == '__main__':
     target_day_dir = os.path.join(parent_dir, target_day)
 
     # Placeholder run method
-    run(target_day_dir)
+    run(target_day_dir, 50)

@@ -1,6 +1,8 @@
 from typing import Dict
 from io import StringIO
+
 import pandas as pd
+import pynmea2
 
 def _get_ends_with(target_dir: str, ftype: str) -> str:
     # This method is premised on the assumption that each of these dailies
@@ -13,6 +15,37 @@ def _get_ends_with(target_dir: str, ftype: str) -> str:
         if file.endswith(ftype):
             select = file
     return select
+
+
+def _process_trace_components(trace_rows: List):
+    cleaned = []
+    for row in trace_rows:
+        try:
+            parsed = pynmea2.parse(row)
+        except Exception:
+            continue
+
+        ds = getattr(parsed, 'datestamp', None)
+        ts = getattr(parsed, 'timestamp', None)
+        lat = getattr(parsed, 'latitude', None)
+        lon = getattr(parsed, 'longitude', None)
+
+        # Check to make sure that all values
+        # are accounted for, otherwise we should
+        # toss that row and not consider it
+        all_clear = True
+        for val in [ds, ts, lat, lon]:
+            if val is None:
+                all_clear = False
+
+        if all_clear:
+            cleaned.append({
+                'datestamp': ds,
+                'timestamp': ts,
+                'latitude': lat,
+                'longitude': lon})
+
+    return pd.DataFrame(cleaned)
     
 
 def load(target_day_dir: str) -> Dict[str, pd.DataFrame]:
@@ -45,7 +78,7 @@ def load(target_day_dir: str) -> Dict[str, pd.DataFrame]:
         aq_data.columns = ['time_elapsed', 'mass', 'alarms', 'errors']
 
     with open(gps_filepath, 'r') as f:
-        gps_data = pd.read_csv(f)
+        gps_data = _process_trace_components([x for x in f])
     
     # TODO: Validation of these desired datasets is critical
     #       in the future to avoid downstream issues
