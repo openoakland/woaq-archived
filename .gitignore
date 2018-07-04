@@ -4,3 +4,5 @@ shifts/*
 *.txt
 yml_template/*
 !requirements.txt
+**.pyc
+**.DS_Store
