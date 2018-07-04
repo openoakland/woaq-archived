@@ -9,5 +9,6 @@ resourceType: geojson
 fileName: schools.geojson
 geoType: circle
 layout: data
+coverage:
+webLink: https://data.oaklandnet.com/
 ---
-Source: https://data.oaklandnet.com/

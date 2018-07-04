@@ -10,4 +10,6 @@ location: AdaptOaklandMaps
 fileName: Oakland_zoning.geojson
 geoType: fill
 layout: data
+coverage:
+webLink:
 ---

@@ -10,4 +10,6 @@ resourceType: geojson
 fileName: Oakland_designated_truck_routes.geojson
 geoType: line
 layout: data
+coverage:
+webLink:
 ---

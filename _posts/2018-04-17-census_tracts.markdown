@@ -9,5 +9,7 @@ resourceType: geojson
 fileName: oakland_census_tracts_2010.geojson
 layout: data
 geoType: fill
+coverage:
+webLink:
 ---
 Source: https://data.oaklandnet.com/

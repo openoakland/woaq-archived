@@ -10,4 +10,6 @@ resourceType: geojson
 fileName: Oakland_parcels.geojson
 geoType: fill
 layout: data
+coverage:
+webLink:
 ---

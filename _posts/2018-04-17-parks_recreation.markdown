@@ -9,5 +9,6 @@ resourceType: geojson
 fileName: parks_recreation_facilities.geojson
 geoType: circle
 layout: data
+coverage:
+webLink: https://data.oaklandnet.com/
 ---
-Source: https://data.oaklandnet.com/

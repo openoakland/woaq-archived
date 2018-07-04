@@ -9,5 +9,6 @@ resourceType: geojson
 fileName: ces_woak.geojson
 geoType: fill
 layout: data
+coverage:
+webLink: https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30
 ---
-Source: https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30

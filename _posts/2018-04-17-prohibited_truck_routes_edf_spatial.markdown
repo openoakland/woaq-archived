@@ -10,5 +10,6 @@ resourceType: geojson
 fileName: Oakland_prohibited_truck_routes.geojson
 geoType: line
 layout: data
+coverage:
+webLink: https://data.oaklandnet.com/
 ---
-Source: https://data.oaklandnet.com/

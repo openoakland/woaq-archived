@@ -10,4 +10,6 @@ resourceType: geojson
 fileName: Oakland_county_roads.geojson
 geoType: line
 layout: data
+coverage:
+webLink:
 ---

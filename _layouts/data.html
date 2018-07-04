@@ -9,9 +9,12 @@ layout: default
 
   <div class="post-content e-content" itemprop="articleBody">
     
-    <strong>Owner:</strong> {{ page.owner }} <br />
-    <strong>Year:</strong> {{ page.year }} <br />
-    <strong>Categories:</strong> {{ page.categories }} <br />
+    {% if page.owner %}<strong>Owner:</strong> {{ page.owner }} <br />{% endif %}
+    {% if page.year %}<strong>Year:</strong> {{ page.year }} <br />{% endif %}
+    {% if page.categories %}<strong>Categories:</strong> {{ page.categories }} <br />{% endif %}
+    {% if page.coverage %}<strong>Spatial Coverage:</strong> {{ page.coverage }} <br />{% endif %}
+    {% if page.webLink %}<strong>Web Link:</strong> <a href='{{ page.webLink }}'>{{ page.webLink }}</a> <br />{% endif %}
+    
     <strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>
     
     {{ content }}
