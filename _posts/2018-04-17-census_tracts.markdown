@@ -10,6 +10,5 @@ fileName: oakland_census_tracts_2010.geojson
 layout: data
 geoType: fill
 coverage:
-webLink:
+webLink: https://data.oaklandnet.com/
 ---
-Source: https://data.oaklandnet.com/

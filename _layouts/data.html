@@ -21,6 +21,11 @@ layout: default
    
   </div>
   
+  
+{{ page.showMap }}
+  
+{% unless page.showMap == false %}
+  
   {% capture file_loc %}
     {{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}
   {% endcapture %}
@@ -51,6 +56,8 @@ layout: default
      });
   });
   </script>
+  
+{% endunless %}
   
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
