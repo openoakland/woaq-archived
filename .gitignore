@@ -4,3 +4,7 @@ shifts/*
 *.txt
 yml_template/*
 !requirements.txt
+env/*
+.idea/*
+
+*.iml
