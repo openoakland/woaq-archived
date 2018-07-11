@@ -7,7 +7,7 @@ month:
 year: 2015
 resourceType: geojson
 fileName: city-limits.geojson
-geoType: fill
+geoType: line
 layout: data
 coverage:
 webLink:
