@@ -22,14 +22,7 @@ This data was collected in a series of surveyor shifts in which a surveyor colle
 
 ### Generating the files
 
-
-```bash
-docker-compose up
-
-#creates a directory called 'shifts' and writes CSVs to it
-python scripts/get_shifts.py
-```
-
+Simply run `python get_shifts.py`. It will create a directory called "shifts" and then save a bunch of CSV files in it.
 
 The name of each CSV file designates the device name (A, B, etc) and the expected range of readings, for reference. Columns include timestamp, lat/long, the filter size used on this shift, and PM (particulate matter) reading.
 
@@ -37,7 +30,7 @@ Orphaned PM and GPS data is *not* included. That is, only readings that contain 
 
 ### Joining Air Quality Data with GPS Data
 
-The files/joiner.py script can be used to join air quality data with GPS data. The air quality data should be a CSV, as produced by a DustTrak II device. (See examples/8530C_2-5_002.csv) The GPS data should be a log file containing NMEA sentences. (See examples/GPS_20140717_193858_8530C.log)
+The files/joiner.py script can be used to join air quality data with GPS data. The air quality data should be a CSV, as produced by a DustTrak II device. (See examples/8530C_2-5_002.csv) The GPS data should be a log file containing NMEA sentences. (See examples/GPS_20140717_193858_8530C.log) Additionally, an empty file should be passed that will become the output CSV file. If necessary, this can be obtained via a getter function called on the object (.getFile()) The steps listed below for obtaining a file will also work.
 
 The output of the script will be a CSV file containing both GPS and air quality data. (See examples/joiner-output.csv)
 
@@ -50,3 +43,6 @@ The command line options are as follows:
 - `-o`/`--out` : the path to where the output file will be created
 - `-t`/`--tolerance` : this parameter is the maximum difference (in seconds) between an air quality datum and a GPS datum for the two data to be joined. In other words, if there is an air quality datum at 12:00:00, but the closest GPS datum is at 12:00:02, then the output will include a row combining those two data if the value of -t is >= 2, otherwise that air quality datum will be dropped.
 - `-f`/`--filter` : this is the size of the filter used to collect the air quality data. (2.5 is most common, 10 may also be used.) Often this is embedded in the filename. E.g., for 8530C_2-5_002.csv, the filter size was 2.5.
+
+
+
