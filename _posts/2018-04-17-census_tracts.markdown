@@ -8,7 +8,7 @@ year: 2010
 resourceType: geojson
 fileName: oakland_census_tracts_2010.geojson
 layout: data
-geoType: fill
+geoType: line
 coverage:
 webLink: https://data.oaklandnet.com/
 ---
