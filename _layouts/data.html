@@ -29,6 +29,10 @@ layout: default
   {% endcapture %}
     
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <script src='https://npmcdn.com/csv2geojson@5.0.2/csv2geojson.js'></script>
+
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
 
   <div id='map' style='width: 100%; height: 500px;'></div>
@@ -43,6 +47,17 @@ layout: default
      zoom: 12 // starting zoom
   });
 
+  $(document).ready(function() {
+      if ("{{page.resourceType}}" == 'shift_by_month') {
+        $.ajax({
+            type: "GET",
+            url: '{{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}',
+            dataType: "text",
+            success: function(csvData) {makeGeoJSON(csvData);}
+         });
+      }
+  });
+
   map.on('load', function () {
       map.addLayer({
           "id": "points",
@@ -53,6 +68,30 @@ layout: default
         }
      });
   });
+  function makeGeoJSON(csvData) {
+    csv2geojson.csv2geojson(csvData, {
+        latfield: 'lat',
+        lonfield: 'lon',
+        delimiter: ','
+    }, function(err, data) {
+        map.on('load', function () {
+
+            map.addLayer({
+                'id': 'pm',
+                'type': 'symbol',
+                'source': {
+                    'type': 'geojson',
+                    'data': data
+                },
+                'layout': {
+                    "icon-image": "marker-15"
+                },
+                'paint': {}
+            });
+        });
+    });
+  }
+
   </script>
   
 {% endunless %}
