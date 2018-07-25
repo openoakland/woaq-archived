@@ -7,7 +7,7 @@ month:
 year: 2017
 resourceType: geojson
 fileName: ces_woak.geojson
-geoType: fill
+geoType: line
 layout: data
 coverage:
 webLink: https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-30

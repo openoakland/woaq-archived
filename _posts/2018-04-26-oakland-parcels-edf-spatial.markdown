@@ -8,7 +8,7 @@ year:
 location: EDF Spatial Data
 resourceType: geojson
 fileName: Oakland_parcels.geojson
-geoType: fill
+geoType: line
 layout: data
 coverage:
 webLink:
