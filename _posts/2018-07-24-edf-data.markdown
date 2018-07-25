@@ -1,0 +1,16 @@
+---
+title: Aclima-EDF-Google 2015-1016 Air Quality Study
+categories: AirPollution
+owner: Environmental Defense Fund
+license:
+month:
+year: 2016
+resourceType: external
+layout: data
+geoType: 
+coverage:
+showMap: false
+webLink: https://www.edf.org/airqualitymaps/download-oakland-air-pollution-data
+---
+
+Full description and data collection methodology here: [https://www.edf.org/airqualitymaps/methodology-how-we-collected-data](https://www.edf.org/airqualitymaps/methodology-how-we-collected-data)

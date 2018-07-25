@@ -14,16 +14,12 @@ layout: default
     {% if page.categories %}<strong>Categories:</strong> {{ page.categories }} <br />{% endif %}
     {% if page.coverage %}<strong>Spatial Coverage:</strong> {{ page.coverage }} <br />{% endif %}
     {% if page.webLink %}<strong>Web Link:</strong> <a href='{{ page.webLink }}'>{{ page.webLink }}</a> <br />{% endif %}
-    
-    <strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>
+    {% if page.fileDownload %}<strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>{% endif %}
     
     {{ content }}
    
   </div>
-  
-  
-{{ page.showMap }}
-  
+    
 {% unless page.showMap == false %}
   
   {% capture file_loc %}
