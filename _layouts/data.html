@@ -14,7 +14,7 @@ layout: default
     {% if page.categories %}<strong>Categories:</strong> <a href='{{ site.baseurl }}/category/{{ page.categories }}'>{{ page.categories }} </a><br />{% endif %}
     {% if page.coverage %}<strong>Spatial Coverage:</strong> {{ page.coverage }} <br />{% endif %}
     {% if page.webLink %}<strong>Web Link:</strong> <a href='{{ page.webLink }}'>{{ page.webLink }}</a> <br />{% endif %}
-    {% if page.fileDownload %}<strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>{% endif %}
+    {% if page.fileName %}<strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>{% endif %}
   
   <div class="data-description">  
     {{ content }}
