@@ -11,11 +11,19 @@ layout: default
     
     {% if page.owner %}<strong>Owner:</strong> {{ page.owner }} <br />{% endif %}
     {% if page.year %}<strong>Year:</strong> {{ page.year }} <br />{% endif %}
-    {% if page.categories %}<strong>Categories:</strong> <a href='{{ site.baseurl }}/category/{{ page.categories }}'>{{ page.categories }} </a><br />{% endif %}
+    {% if page.categories %}
+        {% for category in page.categories %}
+            {% assign category_pages = site.pages-data | where:"tag", category %}
+            {% assign category_page = category_pages.first %}
+            <strong>Category:</strong>
+            <a href='{{ category_page.url | relative_url }}'>{{ category }} </a><br/>
+
+        {% endfor %}
+    {% endif %}
     {% if page.coverage %}<strong>Spatial Coverage:</strong> {{ page.coverage }} <br />{% endif %}
     {% if page.webLink %}<strong>Web Link:</strong> <a href='{{ page.webLink }}'>{{ page.webLink }}</a> <br />{% endif %}
     {% if page.fileName %}<strong>File Download:</strong> <a href={{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}>{{ page.fileName }}</a> <br/>{% endif %}
-  
+    
   <div class="data-description">  
     {{ content }}
   </div>  
@@ -51,6 +59,7 @@ layout: default
       if ("{{page.resourceType}}" == 'shift_by_month') {
         $.ajax({
             type: "GET",
+            // Reformat style: use append
             url: '{{ site.s3_bucket }}/{{ page.resourceType }}/{{ page.fileName }}',
             dataType: "text",
             success: function(csvData) {makeGeoJSON(csvData);}

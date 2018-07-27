@@ -1,0 +1,43 @@
+<h2>Datasets</h2>
+<div class="autopages-meta">
+    {% if page.title == "Home" %}
+        <strong>All Data</strong>
+        {% assign posts = paginator.posts %}
+    
+    {% else %}      
+        <strong>{{page.tag}}</strong>
+        {% assign posts = site.categories[page.tag] %}
+    
+    {% endif %}
+</div>
+
+<ul class="post-listing">
+    {% for post in posts %}
+    <li class="post">
+        <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
+        
+        {% if post.owner %}
+            Source: {{ post.owner }} <br />
+
+        {% endif %}
+        {% if post.year %}  
+            Year: {{ post.year }} <br />
+
+        {% endif %}
+        <ul class="post-categories">
+            {% for category in post.categories %}
+                {% assign category_pages = site.pages-data | where:"tag", category %} 
+                {% assign category_page = category_pages.first %}
+                <li class="category">
+                    Category: <a href="{{ category_page.url | relative_url }}">{{ category }}</a>
+                </li>
+
+            {% endfor %}
+        </ul>
+        {%- if site.show_excerpts -%}
+            {{ post.excerpt }}
+
+        {%- endif -%}
+    </li>
+    {% endfor %}
+</ul>

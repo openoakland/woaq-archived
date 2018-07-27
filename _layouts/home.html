@@ -3,67 +3,11 @@ layout: default
 ---
 
 <div class="home">
-  <div class="categories-list">
-    <h2>Categories</h2>
-    <ul>
-      <li><a href="{{ "/" | relative_url }}">All Data ({{ site.posts.size }})</a></li>
-      {% assign categories_list = site.categories %}
-      {% if categories_list.first[0] == null %}
-        {% for category in categories_list %}
-          <li><a href="{{ "/" | relative_url }}category/{{ category }}">{{ category }} ({{ site.tags[category].size }})</a></li>
-        {% endfor %}
-      {% else %}
-        {% for category in categories_list %}
-          <li><a href="{{ "/" | relative_url }}category/{{ category[0] }}">{{ category[0] }} ({{ category[1].size }})</a></li>
-        {% endfor %}
-      {% endif %}
-      {% assign categories_list = nil %}
-    </ul>
-  </div>
+  {% include categories-list.html %}
+
   <div class="posts-list">
-    <h2>Datasets</h2>
-    <div class="autopages-meta">
-      {% if page.autopages %}
-        <strong>{{page.autopage.display_name}}</strong>
-      {% endif %}
-    </div>
-    <ul class="post-listing">
-      {% for post in paginator.posts %}
-      <li class="post">
-        <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
-        {% if post.owner %}
-          Source: {{ post.owner }} <br />
-        {% endif %}
-        {% if post.year %}  
-          Year: {{ post.year }} <br />
-        {% endif %}   
-        <ul class="post-categories">
-        {% for category in post.categories %}
-          <li class="category">Category: <a href="{{ "/" | relative_url }}category/{{ category }}">{{ category }}</a></li>
-        {% endfor %}
-      </ul>
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
-        {%- endif -%}
-      </li>
-      {% endfor %}
-    </ul>
-  <div class="paginator-links">
-    {% if paginator.total_pages > 1 %}
-    <strong>Page {{paginator.page}} of {{paginator.total_pages}}</strong>
-    <ul>
-      {% if paginator.previous_page %}
-      <li class="previous-link">
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}">Previous</a>
-      </li>
-      {% endif %}
-      {% if paginator.next_page %}
-      <li class="next-link">
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Next</a>
-      </li>
-      {% endif %}
-    </ul>
-    {% endif %}
-  </div>
+    {% include posts-list.html %}    
+    {% include paginator-links.html %}
+
   </div>
 </div>
