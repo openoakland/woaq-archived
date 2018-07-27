@@ -25,9 +25,6 @@ plugins: [
   jekyll-paginate
   ]
 
-# include:
-#   - _pages-data 
-
 collections:
   pages-data:
     output: true
@@ -44,7 +41,7 @@ collections:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-# baseurl: /woaq
+baseurl: /woaq
 mapbox-token: pk.eyJ1IjoiZnJlaWphIiwiYSI6ImNqM3FjajEycDAwbmYycW1rZDZ3Y3ZmaDgifQ.gG6EIJvRcdlHGtyaF7vyrw
 
 ############################################################
