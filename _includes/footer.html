@@ -1,6 +1,23 @@
+{% assign footer_data = site.data.footer %}
 <footer class="site-footer h-card">
+  <data class="u-url" href="{{ "/" | relative_url }}"></data>
+
   <div class="wrapper">
+
+    <h2 class="footer-heading">{{ footer_data.footer_title }}</h2>
+
     <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          {% for link in footer_data.footer_links %}
+          <li class="p-name">
+            <a href="{{ link.href }}">{{ link.title}}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
+
   </div>
+
 </footer>

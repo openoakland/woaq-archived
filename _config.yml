@@ -25,6 +25,14 @@ plugins: [
   jekyll-paginate
   ]
 
+# include:
+#   - _pages-data 
+
+collections:
+  pages-data:
+    output: true
+    permalink: /:title
+
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
@@ -36,7 +44,7 @@ plugins: [
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-baseurl: /woaq
+# baseurl: /woaq
 mapbox-token: pk.eyJ1IjoiZnJlaWphIiwiYSI6ImNqM3FjajEycDAwbmYycW1rZDZ3Y3ZmaDgifQ.gG6EIJvRcdlHGtyaF7vyrw
 
 ############################################################

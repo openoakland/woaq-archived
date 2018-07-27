@@ -1,7 +1,6 @@
 ---
 layout: category
 title: WOEIP data
-tag: WOEIP 
-permalink: /category/WOEIP
+tag: WOEIP
 hidden: true
 ---
