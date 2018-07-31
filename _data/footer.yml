@@ -1,0 +1,16 @@
+
+footer_title: Further Resources
+
+author: Open Oakland WOAQ
+
+footer_links:
+  - title: WOEIP Video
+    href: https://www.youtube.com/watch?time_continue=143&v=KThvnkzSatU
+  - title: WOEIP Homesite    
+    href: http://woeip.org/
+  - title: Project Github
+    href: https://github.com/openoakland/woaq/
+  - title: EDF Air Quality Maps
+    href: https://www.edf.org/airqualitymaps/pollution-and-health-concerns-west-oakland
+  - title: EDF Air Quality Policy Proposals
+    href: https://www.edf.org/airqualitymaps/policies-reduce-pollution-and-protect-health

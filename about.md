@@ -10,14 +10,3 @@ The community of West Oakland is surrounded by several major air polluters. Seve
 WOEIP has many years worth of block-by-block air quality data collected by their many dedicated volunteers using low cost shoulder-mounted air quality sensors. Volunteers receive extensive training on accurate equipment calibration and reporting process, and donate a day to walking around the neighborhood, gathering readings on particulate matter in the air. This form of citizen science educates and engages the local community in air quality activism, and provides a needed check on City and Port air quality reports.
 
 This project is a joint effort of Open Oakland (a Code For America brigade) and WOEIP to make this important data, as well as related partner data, available and comprehensible to environmental justice advocates and members of the community. Check back for updates as this site is under development.
-
-[Learn About WOEIP](https://www.youtube.com/watch?time_continue=143&v=KThvnkzSatU)
-
-[WOEIP Site](http://woeip.org/)
-
-[Project Github](https://github.com/openoakland/woaq/)
-
-[More on West Oakland Air Quality from the EDF](https://www.edf.org/airqualitymaps/pollution-and-health-concerns-west-oakland)
-
-[EDF Air Quality Policy Proposals](https://www.edf.org/airqualitymaps/policies-reduce-pollution-and-protect-health)
-
