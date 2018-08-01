@@ -14,6 +14,7 @@ for pref in `ls shifts  | cut -c4-10 | sort | uniq`; do
 
     # We want to print the CSV header only once.
     skip_line=0
+    rm -f shift_by_month/$pref.csv
     for file in `ls shifts/*$pref*`; do
         tail -n +$skip_line $file >> shift_by_month/$pref.csv
         skip_line=2

@@ -16,13 +16,14 @@ for file in `ls ./shift_by_month`; do
     # Write yaml file line by line
     cat <<EOF  >$md_file
 ---
-title: Citizen Science ${MONTH}-${YEAR}
-owner: WOEIP
+title: WOEIP Air Quality ${MONTH}-${YEAR}
+owner: <a href="https://www.woeip.org/">WOEIP</a>
 layout: data
 month: ${MONTH}
 year: ${YEAR}
-categories: citizenScience
-fileName: <a href=\"http://s3-us-west-2.amazonaws.com/openoakland-woaq/shift_by_month/$file\">CSV here</a>
+categories: WOEIP
+resourceType: shift_by_month
+fileName: $file
 ---
 EOF
 
