@@ -4,7 +4,5 @@ shifts/*
 *.txt
 yml_template/*
 !requirements.txt
-env/*
-.idea/*
-
-*.iml
+**.pyc
+**.DS_Store
